@@ -108,9 +108,11 @@ public class GCMIntentService extends GCMBaseIntentService {
         	//Check the bundle for the pay load body and title
 	        Bundle bundle = intent.getExtras();
 	 	   	if (bundle != null) {
-	 	   		body = bundle.getString("body");
+	 	   		displayMessage(context, "About to get Body" );
+	 	   		Object nbody = bundle.get("body");
+	 	   		
 	 	   		title = bundle.getString("title");
-	 	   		displayMessage(context, title + " : " + body );
+	 	   		displayMessage(context, title + " : " + nbody.getClass() );
 	 	   	} 
         }
  	   	// If there was no body just use a standard message

@@ -102,7 +102,7 @@ There are two java string constants that need to be defined before you’re able
 
 Open the file containing the “CommonUtilities” class located in:
 
-airbop-client/src/com/airbop/client/CommonUtilities.java
+    airbop-client/src/com/airbop/client/CommonUtilities.java
 
 ###### Step 2 – Enter your Project ID
 Locate the string constant definition named “PROJECT_ID” at the beginning of the class, and replace the text <<REPLACE_ME>> with your own Project ID you got from Google’s API console .
@@ -113,7 +113,7 @@ Line containing value to replace:
 
 Replace “<<REPLACE_ME>>” with your Project ID, for example:
 
-    static final String PROJECT_ID = “351738257137”;
+    static final String PROJECT_ID = "918193457137";
 
 
 ###### Step 3 – Enter your AirBop App Key
@@ -125,11 +125,11 @@ Line containing value to replace:
 
 Replace “<<REPLACE_ME>>” with your AirBop App Key, for example:
 
-    static final String AIRBOP_APP_KEY = “6b158be7-589d-4a30-a48f-5c9c04c3cb5f”;
+    static final String AIRBOP_APP_KEY = "3q158wj8-589d-5x94-a79y-8y1c04c3cb92";
 
 ## Ensure a Device is Connected
 
-Before you build and run the app, you must ensure you have either a physical device, or an Android Virtual Device running and connected. For more information on how to run an Android emulator, see [LINK] Managing Virtual Devices - http://developer.android.com/tools/devices/index.html [/LINK] in the Android developer documentation.
+Before you build and run the app, you must ensure you have either a physical device, or an Android Virtual Device running and connected. For more information on how to run an Android emulator, see [Managing Virtual Devices](http://developer.android.com/tools/devices/index.html) in the Android developer documentation.
 
 Build and Run the Sample App
 ----------------------------
