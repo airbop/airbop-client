@@ -1,10 +1,24 @@
 airbop-client
 =============
 
-AirBop Client Example App for Android / GCM
+This article describes how to use the sample project provided by AirBop, as well as a summary of its contents. The project allows you to easily build a working app and see the result of the messages sent using AirBop’s service. You’re welcome to use any of its helper functions or classes in your own app.
 
-Opening the AirBop Sample Project in Eclipse
---------------------------------------------
+While it’s not required for this sample, you can read a generalized overview of using AirBop in your Android app in the article [Using AirBop in your Android App](http://www.airbop.com)
+
+If you haven’t already, you’ll first want to read the article [Getting Started with AirBop](http://www.airbop.com) which describes the steps you need to take to start using AirBop. The following items are required to work with AirBop’s servers whose values need to be defined before building the sample project code:
+
+•	Your Project ID (from Google’s API console)
+•	Your AirBop App Key
+
+*Note:* GCM requires Android 2.2 or later. If you’re testing on an Android emulator, it must be set to Google API level 8 and must also have a Google account added to it (Android version 4.0.4 or later doesn’t require an account).
+
+Get the AirBop Sample Project
+
+AirBop’s sample project is available from the following Git repository: https://github.com/indigorose/airbop-client
+
+<< FURTHER INSTRUCTIONS ABOUT CLONING/GETTING PROJECT CODE ?>>
+
+## Opening the AirBop Sample Project in Eclipse
 
 You can view and work with the AirBop sample project in Eclipse by following the steps below:
 
@@ -33,8 +47,7 @@ Add your Project ID and AirBop App Key to the CommonUtilities.java file. You wil
 
 Once you’ve completed the required variable replacement you can build the project in the Package Explorer by selecting Run > Run As > Android Application.
 
-What’s Included in the AirBop Sample Project
----------------------------------------------
+## What’s Included in the AirBop Sample Project
 
 Below is a brief summary of the java files included in AirBop’s sample project:
 
@@ -131,18 +144,16 @@ Replace “<<REPLACE_ME>>” with your AirBop App Key, for example:
 
 Before you build and run the app, you must ensure you have either a physical device, or an Android Virtual Device running and connected. For more information on how to run an Android emulator, see [Managing Virtual Devices](http://developer.android.com/tools/devices/index.html) in the Android developer documentation.
 
-Build and Run the Sample App
-----------------------------
+##  Build and Run the Sample App
+
 
 You’re now ready to build the sample app and install it on the connected device. Select “Run > Run As > Android Application” from the Eclipse menu. When the app is run on the device, it will register the device on AirBop’s servers which will allow messages to be sent to it from your AirBop account.
 
-Confirm the Device Registered Successfully
-------------------------------------------
+## Confirm the Device Registered Successfully
 
 Login to your AirBop account located at http://www.airbop.com . The AirBop dashboard will show a list of all of the apps added to your account. If your device successfully registered with the AirBop server, you should see a ‘1’ listed next to the app under “Registered Devices”. You can also find this information on the “Info” tab when clicking the app name link.
 
-Send a Test Message Through AirBop
------------------------------------
+## Send a Test Message Through AirBop
 
 While logged into your AirBop account, perform the following steps starting from the AirBop dashboard:
 
@@ -155,7 +166,6 @@ While logged into your AirBop account, perform the following steps starting from
 7.	For this example, you can leave the rest of the settings as their default values.
 8.	When you’re ready to send the message, click the “Send Message” button and agree to the confirmation.
 
-Go Read your Notification Message
----------------------------------
+## Go Read your Notification Message
 
 Now that you’ve sent the message, you should now have a notification message waiting for you on your device in the notification area. Take a look!

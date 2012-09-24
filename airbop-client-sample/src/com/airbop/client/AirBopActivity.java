@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Indigo Rose Corporation
+ * Copyright 2012 Indigo Rose Software Design Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
