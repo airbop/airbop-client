@@ -104,7 +104,7 @@ The AirBop sample application’s Android manifest. Note the additional permissi
 
 The root folder for the AirBop client sample.
 
-###### [airbop-client-sample/README.md](https://github.com/indigorose/airbop-client/blob/master/README.md)
+###### [airbop-client-sample/README.md](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/README.md)
 
 Simple readme for github, contains information from this article.
 
