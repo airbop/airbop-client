@@ -52,11 +52,11 @@ Once you’ve completed the required variable replacement you can build the proj
 
 Below is a brief summary of the java files included in AirBop’s sample project:
 
-###### airbop-client-sample/libs/gcm.jar
+###### [airbop-client-sample/libs/gcm.jar](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/libs/gcm.jar)
 
 The Google Cloud Messaging for Android Library.
 
-###### airbop-client-sample/res/*
+###### [airbop-client-sample/res/*](https://github.com/indigorose/airbop-client/tree/master/airbop-client-sample/res)
 
 The various Android resources used in the sample project.
 
@@ -64,49 +64,49 @@ The various Android resources used in the sample project.
 
 A helper class that extends ‘android.app.Activity’ and provides a basic way to interact with AirBop and GCM. It can be moved into your application for easy re-use. All of the top level registration and un-registration code can be found in this class.
 
-###### airbop-client /src/com/airbop/client/AirBopRegisterTask.java
+###### [airbop-client-sample/src/com/airbop/client/AirBopRegisterTask.java](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/src/com/airbop/client/AirBopRegisterTask.java)
 
 An AnsynTask that will call the ServerUtilities.register() function in a separate thread so that the UI thread is not held up. If you are going to use the AirBopActivity in your app, this class should be brought along as well.
 
-###### airbop-client /src/com/airbop/client/AirBopServerData.java
+###### [airbop-client-sampl/src/com/airbop/client/AirBopServerData.java](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/src/com/airbop/client/AirBopRegisterTask.java)
 
 A simple helper data class used to pass data from the App to the ServerUtilities.register() function. <<MORE LATER>>
 
-###### airbop-client-sample/src/com/airbop/client/CommonUtilities.java
+###### [airbop-client-sample/src/com/airbop/client/CommonUtilities.java](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/src/com/airbop/client/CommonUtilities.java)
 
 This is a utility class that contains the constants for your Project ID and AirBop App Key as well as a helper method to display a message.
 
-###### airbop-client-sample/src/com/airbop/client/DemoActivity.java
+###### [airbop-client-sample/src/com/airbop/client/DemoActivity.java](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/src/com/airbop/client/DemoActivity.java)
 
 This is the sample application’s main activity. 
 
-###### airbop-client-sample/src/com/airbop/client/Device.java
+###### [airbop-client-sample/src/com/airbop/client/Device.java](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/src/com/airbop/client/Device.java)
 
 A utility class which can be used to create a UUID value that can be used for your AirBop device Id. The UUID will be stored in the app’s shared preferences and will not change until the app is uninstalled.
 
-###### airbop-client-sample/src/com/airbop/client/Installation.java
+###### [airbop-client-sample/src/com/airbop/client/Installation.java](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/src/com/airbop/client/Installation.java)
 
 A utility class which can be used to create a UUID value that can be used for your AirBop device Id. The UUID will be stored in file in the App’s application file directory, and will not change until the app is uninstalled.
 
-###### airbop-client-sample/src/com/airbop/client/GCMIntentService.java
+###### [airbop-client-sample/src/com/airbop/client/GCMIntentService.java](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/src/com/airbop/client/GCMIntentService.java)
 
 This is the intent service class with the required overridden callback methods called by the Broadcast Receiver.
 
-###### airbop-client-sample/src/com/airbop/client/ServerUtilities.java
+###### [airbop-client-sample/src/com/airbop/client/ServerUtilities.java](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/src/com/airbop/client/ServerUtilities.java)
 
 A helper class containing static functions that will perform the registration and unregistration actions with the AirBop servers.
 
-###### airbop-client-sample/AndroidManifest.xml
+###### [airbop-client-sample/AndroidManifest.xml](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/AndroidManifest.xml)
 
 The AirBop sample application’s Android manifest. Note the additional permissions, BroadcastReceiver, and Service references.
 
-###### airbop-client-sample/.*
+###### [airbop-client-sample/.*](https://github.com/indigorose/airbop-client/tree/master/airbop-client-sample)
 
 The root folder for the AirBop client sample.
 
-###### airbop-client-sample/README.md
+###### [airbop-client-sample/README.md](https://github.com/indigorose/airbop-client/blob/master/README.md)
 
-This document.
+Simple readme for github, contains information from this article.
 
 ## Values Needing Replacement
 
