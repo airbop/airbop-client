@@ -52,61 +52,61 @@ Once you’ve completed the required variable replacement you can build the proj
 
 Below is a brief summary of the java files included in AirBop’s sample project:
 
-###### airbop-client/libs/gcm.jar
+###### airbop-client-sample/libs/gcm.jar
 
 The Google Cloud Messaging for Android Library.
 
-###### airbop-client/res/*
+###### airbop-client-sample/res/*
 
 The various Android resources used in the sample project.
 
-###### airbop-client /src/com/airbop/client/ AirBopActivity.java
+###### [airbop-client-sample/src/com/airbop/client/AirBopActivity.java](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/src/com/airbop/client/AirBopActivity.java)
 
 A helper class that extends ‘android.app.Activity’ and provides a basic way to interact with AirBop and GCM. It can be moved into your application for easy re-use. All of the top level registration and un-registration code can be found in this class.
 
-###### airbop-client /src/com/airbop/client/ AirBopRegisterTask.java
+###### airbop-client /src/com/airbop/client/AirBopRegisterTask.java
 
 An AnsynTask that will call the ServerUtilities.register() function in a separate thread so that the UI thread is not held up. If you are going to use the AirBopActivity in your app, this class should be brought along as well.
 
-###### airbop-client /src/com/airbop/client/ AirBopServerData.java
+###### airbop-client /src/com/airbop/client/AirBopServerData.java
 
 A simple helper data class used to pass data from the App to the ServerUtilities.register() function. <<MORE LATER>>
 
-###### airbop-client/src/com/airbop/client/ CommonUtilities.java
+###### airbop-client-sample/src/com/airbop/client/CommonUtilities.java
 
 This is a utility class that contains the constants for your Project ID and AirBop App Key as well as a helper method to display a message.
 
-###### airbop-client/src/com/airbop/client/DemoActivity.java
+###### airbop-client-sample/src/com/airbop/client/DemoActivity.java
 
 This is the sample application’s main activity. 
 
-###### airbop-client/src/com/airbop/client/Device.java
+###### airbop-client-sample/src/com/airbop/client/Device.java
 
 A utility class which can be used to create a UUID value that can be used for your AirBop device Id. The UUID will be stored in the app’s shared preferences and will not change until the app is uninstalled.
 
-###### airbop-client/src/com/airbop/client/Installation.java
+###### airbop-client-sample/src/com/airbop/client/Installation.java
 
 A utility class which can be used to create a UUID value that can be used for your AirBop device Id. The UUID will be stored in file in the App’s application file directory, and will not change until the app is uninstalled.
 
-###### airbop-client/src/com/airbop/client/GCMIntentService.java
+###### airbop-client-sample/src/com/airbop/client/GCMIntentService.java
 
 This is the intent service class with the required overridden callback methods called by the Broadcast Receiver.
 
-###### airbop-client/src/com/airbop/client/ServerUtilities.java
+###### airbop-client-sample/src/com/airbop/client/ServerUtilities.java
 
 A helper class containing static functions that will perform the registration and unregistration actions with the AirBop servers.
 
-###### airbop-client/AndroidManifest.xml
+###### airbop-client-sample/AndroidManifest.xml
 
 The AirBop sample application’s Android manifest. Note the additional permissions, BroadcastReceiver, and Service references.
 
-###### airbop-client/.*
+###### airbop-client-sample/.*
 
 The root folder for the AirBop client sample.
 
-###### airbop-client/README
+###### airbop-client-sample/README.md
 
-Some extra information about the AirBop client sample.
+This document.
 
 ## Values Needing Replacement
 
@@ -116,7 +116,7 @@ There are two java string constants that need to be defined before you’re able
 
 Open the file containing the “CommonUtilities” class located in:
 
-    airbop-client/src/com/airbop/client/CommonUtilities.java
+    airbop-client-sample/src/com/airbop/client/CommonUtilities.java
 
 ###### Step 2 – Enter your Project ID
 Locate the string constant definition named “PROJECT_ID” at the beginning of the class, and replace the text <<REPLACE_ME>> with your own Project ID you got from Google’s API console .
