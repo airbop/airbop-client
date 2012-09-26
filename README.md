@@ -12,11 +12,29 @@ If you haven’t already, you’ll first want to read the article [Getting Start
 
 *Note:* GCM requires Android 2.2 or later. If you’re testing on an Android emulator, it must be set to Google API level 8 and must also have a Google account added to it (Android version 4.0.4 or later doesn’t require an account).
 
-Get the AirBop Sample Project
+## Get the AirBop Sample Project
 
 AirBop’s sample project is available from the following Git repository: https://github.com/indigorose/airbop-client
 
-<< FURTHER INSTRUCTIONS ABOUT CLONING/GETTING PROJECT CODE ?>>
+You can either download the project as a zip file using the following link: https://github.com/indigorose/airbop-client/zipball/master
+
+Or you can use git to clone the repository as described below:
+
+###### Step 1
+
+The first step is to seup git on your computer as described in the github documentation: https://help.github.com/articles/set-up-git
+
+###### Step 2
+
+The next setp is to get the actual code, you can do this by either forking the airbop-client repo as per these intructions: https://help.github.com/articles/fork-a-repo
+
+Or you can clone a local version of the repo using the following git command:
+
+    $ git clone git@github.com:indigorose/airbop-client.git
+    
+Or:
+
+    $ git clone https://github.com/indigorose/airbop-client.git
 
 ## Opening the AirBop Sample Project in Eclipse
 
