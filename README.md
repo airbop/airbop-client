@@ -84,7 +84,7 @@ A helper class that extends ‘android.app.Activity’ and provides a basic way 
 
 ###### [airbop-client-sample/src/com/airbop/client/AirBopRegisterTask.java](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/src/com/airbop/client/AirBopRegisterTask.java)
 
-An AnsynTask that will call the ServerUtilities.register() function in a separate thread so that the UI thread is not held up. If you are going to use the AirBopActivity in your app, this class should be brought along as well.
+An AsyncTask that will call the ServerUtilities.register() function in a separate thread so that the UI thread is not held up. If you are going to use the AirBopActivity in your app, this class should be brought along as well.
 
 ###### [airbop-client-sampl/src/com/airbop/client/AirBopServerData.java](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/src/com/airbop/client/AirBopRegisterTask.java)
 
