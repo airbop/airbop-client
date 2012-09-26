@@ -7,8 +7,8 @@ While it’s not required for this sample, you can read a generalized overview o
 
 If you haven’t already, you’ll first want to read the article [Getting Started with AirBop](http://www.airbop.com) which describes the steps you need to take to start using AirBop. The following items are required to work with AirBop’s servers whose values need to be defined before building the sample project code:
 
-•	Your Project ID (from Google’s API console)
-•	Your AirBop App Key
+* Your Project ID (from Google’s API console)
+* Your AirBop App Key
 
 *Note:* GCM requires Android 2.2 or later. If you’re testing on an Android emulator, it must be set to Google API level 8 and must also have a Google account added to it (Android version 4.0.4 or later doesn’t require an account).
 
