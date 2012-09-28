@@ -25,7 +25,10 @@ import com.google.android.gcm.GCMRegistrar;
 
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.location.Location;
@@ -46,6 +49,8 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
     private AirBopRegisterTask  mRegisterTask = null;
     private AsyncTask<Void, Void, Void> mUnRegisterTask = null;
     protected AirBopServerData mServerData = null;
+    private AirBopRegisterReceiver mRegisterReceiver = null;
+    protected boolean mServiceRunning = false;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,7 +117,8 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
             	displayMessage(appContext, getString(R.string.already_registered));
             
             	return;
-            } else if (mRegisterTask == null){
+            }// else if (mRegisterTask == null){
+            else if (mServiceRunning == false) {
             	// We have previously gotten the regID from the GCM server, but
             	// when we tried to register with AirBop in the
             	// GCMIntentService.onRegistered() callback it failed, so let's try again
@@ -123,63 +129,33 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
                 // hence the use of AsyncTask instead of a raw thread.
             	
             	
-        		mRegisterTask = new AirBopRegisterTask(this
-	    			 , appContext
-	    			 , regId
-	    			 , mServerData);
-	    	 	mRegisterTask.execute(null, null, null);
+        		//mRegisterTask = new AirBopRegisterTask(this
+	    		//	 , appContext
+	    		//	 , regId
+	    		//	 , mServerData);
+	    	 	//mRegisterTask.execute(null, null, null);
 
-            	/*
-                mRegisterTask = new AsyncTask<Void, Void, Void>() {
-
-                    @Override
-                    protected Void doInBackground(Void... params) {
-                        
-                    	if (withLocation) {
-                    		//Use location
-                    		Location location = ServerUtilities.getLastLocation(appContext);
-                    		if (location != null) {
-                		    	mServerData.mLocation = location;
-                		    } else {
-                	    		ServerUtilities.getCurrentLocationAndPost(
-                	    				appContext
-                	    				, regId);
-                	    		return null;
-                	    	}
-                    	}
-                    	boolean registered =
-                                ServerUtilities.register(appContext
-                                		, regId
-                                		, AIRBOP_APP_KEY
-                                		, mServerData);
-                        // At this point all attempts to register with the AirBop
-                        // server failed, so we need to unregister the device
-                        // from GCM - the app will try to register again when
-                        // it is restarted. Note that GCM will send an
-                        // unregistered callback upon completion, but
-                        // GCMIntentService.onUnregistered() will ignore it.
-                        if (!registered) {
-                            GCMRegistrar.unregister(appContext);
-                        }
-                    	
-                        return null;
-                    }
-
-                    @Override
-                    protected void onPostExecute(Void result) {
-                        mRegisterTask = null;
-                    }
-
-                };
-                mRegisterTask.execute(null, null, null);
-                */
+            	
+	    	 	if (mRegisterReceiver == null) {
+	    	 		// Register receiver
+					registerAirBopRegisterReceiver();
+	    	 	}
+	    	 	
+	    	 	
+    	 		Intent intent = new Intent(this, AirBopIntentService.class);
+				intent.putExtra(AirBopIntentService.BUNDLE_REG_ID, regId);
+									
+				mServiceRunning = true;
+				// Start Service		
+				startService(intent);
+	    	 	
             } else {
             	displayMessage(appContext, getString(R.string.reg_thread_running));
             }
         }
     }
     
-    protected void unRegister() {
+    protected void unRegister(final boolean bUnregisterFromGCM) {
     	// Try to unregister, but not in the UI thread.
         // It's also necessary to cancel the thread onDestroy(),
         // hence the use of AsyncTask instead of a raw thread.
@@ -201,7 +177,7 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
 		                        		, regId
 		                        		, AIRBOP_APP_KEY);
 		                // If this worked unregister from the GCM servers
-		                if (unregistered) {
+		                if ((unregistered) && (bUnregisterFromGCM)) {
 		                    GCMRegistrar.unregister(appContext);
 		                }
 		                return null;
@@ -230,6 +206,7 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
         if (mUnRegisterTask != null) {
         	mUnRegisterTask.cancel(true);
         }
+        unregisterAirBopRegisterReceiver();
         unregisterFromLocationManager();
         GCMRegistrar.onDestroy(getApplicationContext());
         super.onDestroy();
@@ -302,5 +279,37 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
 		
 	}
     
-    
+	public void registerAirBopRegisterReceiver() {
+		
+		if (mRegisterReceiver == null) {
+			//Log.v(TAhttp://www.trucktrend.com/rss/all/index.htmlG, "registerRSSReceiver");
+			//Receiver
+			IntentFilter filter = new IntentFilter(AirBopIntentService.ACTION_REGISTRATION_PROCESSED);
+			//filter.addAction(RssService.ACTION_FEED_STARTING);
+			filter.addCategory(Intent.CATEGORY_DEFAULT);
+			mRegisterReceiver = new AirBopRegisterReceiver();
+			registerReceiver(mRegisterReceiver, filter);
+		}
+	}
+
+	protected void unregisterAirBopRegisterReceiver() {
+		if (mRegisterReceiver != null) {
+			//Log.v(TAG, "unregisterRSSReceiver");
+			unregisterReceiver(mRegisterReceiver);
+			mRegisterReceiver = null;
+		}
+	}
+	
+	public class AirBopRegisterReceiver extends BroadcastReceiver {
+		
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			displayMessage(context, "AirBopRegisterReceiver onReceive");
+			mServiceRunning = false;
+			displayMessage(context, "AirBopRegisterReceiver result: "
+					+ intent.getBooleanExtra(AirBopIntentService.BUNDLE_AIRBOP_SUCCESS, false));
+			
+		}
+	}
 }

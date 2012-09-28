@@ -95,6 +95,7 @@
           application uses a custom BroadcastReceiver that redefines its name.
         -->
         <service android:name=".GCMIntentService" />
+        <service android:name=".AirBopIntentService"></service>
     </application>
 
 </manifest>

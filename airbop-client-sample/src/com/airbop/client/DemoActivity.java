@@ -68,7 +68,7 @@ public class DemoActivity extends AirBopActivity {
             	register(USE_LOCATION);
                 return true;
             case R.id.options_unregister:
-            	unRegister();
+            	unRegister(true);
                 return true;
             case R.id.options_clear:
                 mDisplay.setText(null);
@@ -79,6 +79,9 @@ public class DemoActivity extends AirBopActivity {
             case R.id.options_unregister_gcm:
             	GCMRegistrar.unregister(getApplicationContext());
             	GCMRegistrar.setRegisteredOnServer(getApplicationContext(), false);
+                return true;  
+            case R.id.options_unregister_airbop:
+            	unRegister(false);
                 return true;  
             default:
                 return super.onOptionsItemSelected(item);

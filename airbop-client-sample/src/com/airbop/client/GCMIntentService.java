@@ -113,10 +113,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 	 	   	if (bundle != null) {
 	 	   		displayMessage(context, "Message bundle: " +  bundle);
 	 	   		message = bundle.getString("message");
-	 	   		if (message != null) {
-	 	   			message = bundle.getString("body");
-	 	   		}
-	 	   		
+	 	   			 	   		
 	 	   		title = bundle.getString("title");
 	 	   		
 	 	   		url = bundle.getString("url");
