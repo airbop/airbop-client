@@ -72,7 +72,7 @@ public final class ServerUtilities {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("reg", regId);
 		params.put("app", airBopId);
-		params.put("device", Installation.id(context));
+		params.put("device", Device.id(context));
 		server_data.fillParams(params);
 		displayMessage(context, "Register Params: " + params);		
 		long backoff = BACKOFF_MILLI_SECONDS + random.nextInt(1000);
@@ -150,7 +150,7 @@ public final class ServerUtilities {
         Map<String, String> params = new HashMap<String, String>();
         
         params.put("app", airBopId);
-		params.put("device", Installation.id(context));
+		params.put("device", Device.id(context));
 		//params.put("device", Device.id(context));
         try {
         	post(serverUrl, params);

@@ -38,7 +38,7 @@ public class Device {
         return sID;
     }
 
-    private static String readInstallationPref(Context context){
+    public static String readInstallationPref(Context context){
     	final SharedPreferences prefs = getPreferences(context);
     	if(prefs != null) {
     		return prefs.getString(INSTALLATION, null);

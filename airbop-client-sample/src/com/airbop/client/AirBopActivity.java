@@ -98,14 +98,14 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
     }
     
     private  void internalRegister() {	
-    	
-    	final Context appContext = getApplicationContext();
+     	final Context appContext = getApplicationContext();
     	final String regId = GCMRegistrar.getRegistrationId(appContext);
     	if (regId.equals("")) {
         	// We don't have a REG ID from GCM so let's ask for one. 
         	// The response from the GCM server will trigger: 
         	// GCMIntentService.onRegistered() where we will then register with
         	// AiRBop's servers.
+    		displayMessage(appContext, "Asking GCM for th reg ID");
         	GCMRegistrar.register(appContext, PROJECT_ID);
         } else {
         	
@@ -309,7 +309,7 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
 			mServiceRunning = false;
 			displayMessage(context, "AirBopRegisterReceiver result: "
 					+ intent.getBooleanExtra(AirBopIntentService.BUNDLE_AIRBOP_SUCCESS, false));
-			
+			unregisterReceiver(mRegisterReceiver);
 		}
 	}
 }

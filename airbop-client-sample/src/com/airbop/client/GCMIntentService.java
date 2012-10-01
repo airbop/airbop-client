@@ -60,7 +60,7 @@ public class GCMIntentService extends GCMBaseIntentService {
     protected void onRegistered(Context context, String registrationId) {
     	
         Log.i(TAG, "Device registered: regId = " + registrationId);
-        displayMessage(context, getString(R.string.gcm_registered));
+        displayMessage(context, getString(R.string.gcm_registered)  + registrationId);
         //Get our data for the server
         AirBopServerData server_data = AirBopServerData.fillDefaults();
         server_data.loadCurrentLocation(context);
@@ -71,7 +71,6 @@ public class GCMIntentService extends GCMBaseIntentService {
     			, registrationId
     			, AIRBOP_APP_KEY
     			, server_data);
-
     }
 
     /**
@@ -91,6 +90,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             // This callback results from the call to unregister made on
             // ServerUtilities when the registration to the server failed.
         	Log.i(TAG, "Ignoring unregister callback");
+        	
         }
     }
     /**

@@ -17,7 +17,7 @@ public class AirBopIntentService extends IntentService {
 	
 	public AirBopIntentService() {
 		super("AirBopIntentService");
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	@Override

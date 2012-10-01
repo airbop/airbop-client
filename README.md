@@ -158,6 +158,35 @@ Line containing value to replace:
 Replace “<<REPLACE_ME>>” with your AirBop App Key, for example:
 
     static final String AIRBOP_APP_KEY = "3q158wj8-589d-5x94-a79y-8y1c04c3cb92";
+    
+## What is sent to the AirBop Servers
+
+When you run the AirBop client application the following information will be sent to the server:
+
+###### reg
+The registration ID received from the GCM servers. Described by in the [GCM Architectural Overview](http://developer.android.com/guide/google/gcm/gcm.html)
+
+###### app
+Your AirBop application key.
+
+###### lat (optional)
+The latitude value of the device. Stored as a float and accurate to one city block.
+
+###### long (optional)
+The longitude value of the device. Stored as a float and accurate to one city block.
+
+###### lang (optional)
+The [ISO639-1 language code](http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes). Use:
+    Locale.getDefault().toString();
+Only the first two characters of the locale will be stored.
+ 
+###### country (optional)
+The [ISO 3166-1 alpha-2 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#Officially_assigned_code_elements). This must be exactly two characters or it will be ignored.
+
+###### state (optional)
+The two character state or province code from the [USA](http://en.wikipedia.org/wiki/List_of_U.S._state_abbreviations#PUSPS) or [Canada](http://en.wikipedia.org/wiki/Canadian_subnational_postal_abbreviations). This must be exactly two characters or it will be ignored.
+
+If the location data is not passed the server will attempt to fill in the data by performing an IP lookup on the device that posted the data.
 
 ## Ensure a Device is Connected
 
