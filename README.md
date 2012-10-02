@@ -82,10 +82,9 @@ The various Android resources used in the sample project.
 
 A helper class that extends ‘android.app.Activity’ and provides a basic way to interact with AirBop and GCM. It can be moved into your application for easy re-use. All of the top level registration and un-registration code can be found in this class.
 
-
 ###### [airbop-client-sample/src/com/airbop/client/AirBopIntentService.java](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/src/com/airbop/client/AirBopIntentService.java)
 
-A simple [IntentService](http://developer.android.com/reference/android/app/IntentService.html) that will register with the AirBop servers in a separate thread. It performs the same jopb as the AirBopRegisterTask class, but is useful if you wanted to perform the registration outside of an [Activity](http://developer.android.com/reference/android/app/Activity.html).
+A simple [IntentService](http://developer.android.com/reference/android/app/IntentService.html) that will register with the AirBop servers in a separate thread. It performs the same job as the AirBopRegisterTask class, but is useful if you wanted to perform the registration outside of an [Activity](http://developer.android.com/reference/android/app/Activity.html).
 
 ###### [airbop-client-sample/src/com/airbop/client/AirBopRegisterTask.java](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/src/com/airbop/client/AirBopRegisterTask.java)
 

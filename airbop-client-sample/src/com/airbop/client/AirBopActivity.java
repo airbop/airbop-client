@@ -73,6 +73,7 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
     }
    
     protected void register(final boolean withLocation) {	
+    	
     	if (withLocation) {
     		
     		Location location = ServerUtilities.getLastLocation(this);
@@ -309,7 +310,6 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
 			mServiceRunning = false;
 			displayMessage(context, "AirBopRegisterReceiver result: "
 					+ intent.getBooleanExtra(AirBopIntentService.BUNDLE_AIRBOP_SUCCESS, false));
-			unregisterReceiver(mRegisterReceiver);
 		}
 	}
 }
