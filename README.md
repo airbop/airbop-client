@@ -161,13 +161,14 @@ Replace “<<REPLACE_ME>>” with your AirBop App Key, for example:
     
 ## What is sent to the AirBop Servers
 
-When you run the AirBop client application the following information will be sent to the server:
+When you run the AirBop client application the following information can be sent to the server as part of the post parameters during the registration process:
 
 ###### reg
-The registration ID received from the GCM servers. Described by in the [GCM Architectural Overview](http://developer.android.com/guide/google/gcm/gcm.html)
+The registration ID received from the GCM servers. Described by in the [GCM Architectural Overview](http://developer.android.com/guide/google/gcm/gcm.html). You can get load this value from the GCM jar using the following: 
+    GCMRegistrar.getRegistrationId(appContext); 
 
 ###### app
-Your AirBop application key.
+Your AirBop application key. You can read more about this on the [AirBop website](http://www.airbop.com/tutorials/getting-started).
 
 ###### lat (optional)
 The latitude value of the device. Stored as a float and accurate to one city block.
@@ -186,14 +187,15 @@ The [ISO 3166-1 alpha-2 country code](http://en.wikipedia.org/wiki/ISO_3166-1_al
 ###### state (optional)
 The two character state or province code from the [USA](http://en.wikipedia.org/wiki/List_of_U.S._state_abbreviations#PUSPS) or [Canada](http://en.wikipedia.org/wiki/Canadian_subnational_postal_abbreviations). This must be exactly two characters or it will be ignored.
 
-If the location data is not passed the server will attempt to fill in the data by performing an IP lookup on the device that posted the data.
+If the location data is not passed the server will attempt to fill in the data by performing an IP lookup on the device that posted the data. The location data that the AirBop server get's will be quite accurate (99.5% at a country level and 90% at a state level) so you will only need to provide your own data if you need greater accuracy.
+
+When you are unregistering only the `reg` and `app` parameters are needed.
 
 ## Ensure a Device is Connected
 
 Before you build and run the app, you must ensure you have either a physical device, or an Android Virtual Device running and connected. For more information on how to run an Android emulator, see [Managing Virtual Devices](http://developer.android.com/tools/devices/index.html) in the Android developer documentation.
 
 ##  Build and Run the Sample App
-
 
 You’re now ready to build the sample app and install it on the connected device. Select “Run > Run As > Android Application” from the Eclipse menu. When the app is run on the device, it will register the device on AirBop’s servers which will allow messages to be sent to it from your AirBop account.
 

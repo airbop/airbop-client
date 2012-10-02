@@ -67,7 +67,13 @@ public class AirBopServerData {
 		//	server_data.mBuildModel = Build.MODEL;
 		//	server_data.mVersionRelease = Build.VERSION.RELEASE;
 		//	server_data.mVersionSDK = Build.VERSION.SDK_INT;
-			server_data.mLanguage = Locale.getDefault().toString();
+			Locale default_locale = Locale.getDefault();
+			if (default_locale != null) {
+				server_data.mLanguage = default_locale.toString();
+				server_data.mCountry = default_locale.getCountry();
+			}
+			
+			
 		}
 		return server_data;
 	}
