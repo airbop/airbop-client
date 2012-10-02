@@ -38,9 +38,6 @@ public class AirBopServerData {
 	private static final String TAG = "AirBopServerData";
 	 
 	public Location mLocation = null;
-	//public String mBuildModel = null;
-	//public String mVersionRelease = null;
-	//public int mVersionSDK = -1;
 	public String mLanguage = null;
 	public String mCountry = null;
 	public String mState = null;
@@ -50,11 +47,9 @@ public class AirBopServerData {
 	static final String LANGUAGE = "lang";
 	static final String COUNTRY = "country";
 	static final String STATE = "state";
-	//static final String MODEL = "model";
-	//static final String OS_VERSION = "os_version";
-	//static final String SDK_VERSION = "sdk_version";
+	static final String REGISTRATION_ID = "reg";
+	static final String AIRBOP_KEY = "app";
 	
-
     private static final String PREFERENCES = "com.airbop.client.data";
 	
 	public AirBopServerData() {
@@ -64,9 +59,6 @@ public class AirBopServerData {
 	public static AirBopServerData fillDefaults() {
 		AirBopServerData server_data = new AirBopServerData();
 		if (server_data != null) {
-		//	server_data.mBuildModel = Build.MODEL;
-		//	server_data.mVersionRelease = Build.VERSION.RELEASE;
-		//	server_data.mVersionSDK = Build.VERSION.SDK_INT;
 			Locale default_locale = Locale.getDefault();
 			if (default_locale != null) {
 				server_data.mLanguage = default_locale.toString();

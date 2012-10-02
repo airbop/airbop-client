@@ -82,9 +82,16 @@ The various Android resources used in the sample project.
 
 A helper class that extends ‘android.app.Activity’ and provides a basic way to interact with AirBop and GCM. It can be moved into your application for easy re-use. All of the top level registration and un-registration code can be found in this class.
 
+
+###### [airbop-client-sample/src/com/airbop/client/AirBopIntentService.java](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/src/com/airbop/client/AirBopIntentService.java)
+
+A simple [IntentService](http://developer.android.com/reference/android/app/IntentService.html) that will register with the AirBop servers in a separate thread. It performs the same jopb as the AirBopRegisterTask class, but is useful if you wanted to perform the registration outside of an [Activity](http://developer.android.com/reference/android/app/Activity.html).
+
 ###### [airbop-client-sample/src/com/airbop/client/AirBopRegisterTask.java](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/src/com/airbop/client/AirBopRegisterTask.java)
 
-An AsyncTask that will call the ServerUtilities.register() function in a separate thread so that the UI thread is not held up. If you are going to use the AirBopActivity in your app, this class should be brought along as well.
+An [AsyncTask](http://developer.android.com/reference/android/os/AsyncTask.html) that will call the ServerUtilities.register() function in a separate thread so that the UI thread is not held up. If you are going to use the AirBopActivity in your app, this class should be brought along as well. 
+
+If you want to perform your registration outside of an Activity, might want to consider using the AirBopIntentService class.
 
 ###### [airbop-client-sampl/src/com/airbop/client/AirBopServerData.java](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/src/com/airbop/client/AirBopRegisterTask.java)
 
@@ -97,14 +104,6 @@ This is a utility class that contains the constants for your Project ID and AirB
 ###### [airbop-client-sample/src/com/airbop/client/DemoActivity.java](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/src/com/airbop/client/DemoActivity.java)
 
 This is the sample application’s main activity. 
-
-###### [airbop-client-sample/src/com/airbop/client/Device.java](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/src/com/airbop/client/Device.java)
-
-A utility class which can be used to create a UUID value that can be used for your AirBop device Id. The UUID will be stored in the app’s shared preferences and will not change until the app is uninstalled.
-
-###### [airbop-client-sample/src/com/airbop/client/Installation.java](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/src/com/airbop/client/Installation.java)
-
-A utility class which can be used to create a UUID value that can be used for your AirBop device Id. The UUID will be stored in file in the App’s application file directory, and will not change until the app is uninstalled.
 
 ###### [airbop-client-sample/src/com/airbop/client/GCMIntentService.java](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/src/com/airbop/client/GCMIntentService.java)
 

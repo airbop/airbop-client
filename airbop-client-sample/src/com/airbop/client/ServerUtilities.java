@@ -16,6 +16,8 @@
  */
 package com.airbop.client;
 
+import static com.airbop.client.AirBopServerData.REGISTRATION_ID;
+import static com.airbop.client.AirBopServerData.AIRBOP_KEY;
 import static com.airbop.client.CommonUtilities.SERVER_URL;
 import static com.airbop.client.CommonUtilities.TAG;
 import static com.airbop.client.CommonUtilities.displayMessage;
@@ -42,6 +44,8 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+
+
 
 /**
  * Helper class used to communicate with the demo server.
@@ -70,9 +74,8 @@ public final class ServerUtilities {
 		String serverUrl = SERVER_URL + "/register";
 		
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("reg", regId);
-		params.put("app", airBopId);
-		params.put("device", Device.id(context));
+		params.put(REGISTRATION_ID, regId);
+		params.put(AIRBOP_KEY, airBopId);
 		server_data.fillParams(params);
 		displayMessage(context, "Register Params: " + params);		
 		long backoff = BACKOFF_MILLI_SECONDS + random.nextInt(1000);
@@ -150,8 +153,8 @@ public final class ServerUtilities {
         Map<String, String> params = new HashMap<String, String>();
         
         params.put("app", airBopId);
-		params.put("device", Device.id(context));
-		//params.put("device", Device.id(context));
+		params.put("reg", regId);
+		
         try {
         	post(serverUrl, params);
             // If there is no exception we've unregistered so set the flag
