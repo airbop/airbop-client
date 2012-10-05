@@ -105,10 +105,11 @@ public final class ServerUtilities {
                 			, context.getString(R.string.already_registered));
                 	return true;
                 } */
-            	if (e.getMessage().equals("400")) {
+            	int error_code = Integer.valueOf(e.getMessage());
+            	if ((error_code >= 400) && (error_code <= 499)) {
                 	displayMessage(context
-                			, context.getString(R.string.request_error));
-                	return true;
+                			, context.getString(R.string.request_error, error_code));
+                	return false;
                 } else {
                 	
 	            	displayMessage(context
@@ -290,9 +291,9 @@ public final class ServerUtilities {
             if ((status != 200) 
             	&& (status != 201)
             	&& (status != 202)){
-            	if ((status >=500) && (status <= 510)) {
+            	if ((status >=500) && (status <= 599)) { //500 codes
             		throw new IOException(Integer.toString(status));
-            	} else if (status == 400) {
+            	} else if ((status >=400) && (status <= 499)) { //400 codes
             		throw new IOException(Integer.toString(status));
             	}
             }

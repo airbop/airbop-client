@@ -18,7 +18,7 @@
 
     <string name="app_name">AirBop Client</string>
     <string name="error_config">Please set the %1$s constant and recompile the app.</string>
-    <string name="request_error">ERROR: request could not be processed by AirBop.</string>
+    <string name="request_error">ERROR: request could not be processed by AirBop: %1$s</string>
     <string name="gcm_registered">From GCM server: device successfully registered!</string>
     <string name="gcm_unregistered">From GCM server: device successfully unregistered!</string>
     <string name="gcm_message">From GCM: you got message!</string>

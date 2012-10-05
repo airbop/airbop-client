@@ -112,6 +112,8 @@ public class GCMIntentService extends GCMBaseIntentService {
 	        Bundle bundle = intent.getExtras();
 	 	   	if (bundle != null) {
 	 	   		displayMessage(context, "Message bundle: " +  bundle);
+	 	   		
+	 	   		Log.i(TAG, "Message bundle: " +  bundle);
 	 	   		message = bundle.getString("message");
 	 	   			 	   		
 	 	   		title = bundle.getString("title");
