@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <style name="AirBop" parent="@android:style/Theme.Holo">
+    <item name="android:actionBarStyle">@style/AirBop.ActionBarStyle</item>
+  </style>
+
+  <style name="AirBop.ActionBarStyle" parent="@android:style/Widget.Holo.ActionBar">
+    <item name="android:titleTextStyle">@style/AirBop.ActionBar.TitleTextStyle</item>
+    <item name="android:displayOptions">useLogo|showHome</item>
+  </style>
+
+  <style name="AirBop.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+    <item name="android:textColor">#afafaf</item>
+  </style>
+</resources>
