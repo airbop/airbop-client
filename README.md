@@ -22,11 +22,11 @@ Or you can use git to clone the repository as described below:
 
 ###### Step 1
 
-The first step is to seup git on your computer as described in the github documentation: https://help.github.com/articles/set-up-git
+The first step is to setup git on your computer as described in the github documentation: https://help.github.com/articles/set-up-git
 
 ###### Step 2
 
-The next setp is to get the actual code, you can do this by either forking the airbop-client repo as per these intructions: https://help.github.com/articles/fork-a-repo
+The next step is to get sample client code; you can do this by either forking the airbop-client repo as per these instructions: https://help.github.com/articles/fork-a-repo
 
 Or you can clone a local version of the repo using the following git command:
 
