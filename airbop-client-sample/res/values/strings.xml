@@ -26,7 +26,7 @@
     <string name="gcm_recoverable_error">From GCM: recoverable error (%1$s).</string>
     <string name="gcm_deleted">From GCM server: server deleted %1$d pending messages!</string>
     <string name="server_registering">Trying (attempt %1$d/%2$d) to register device on AirBop Server.</string>
-    <string name="server_registered">From AirBop Server: successfully added device!</string>
+    <string name="server_registered"> AirBop servers have returned a success code. Check your dashboard to confirm a successful registration.</string>
     <string name="server_unregistered">From AirBop Server: successfully removed device!</string>
     <string name="server_register_error">Could not register device on AirBop Server after %1$d attempts.</string>
     <string name="server_unregister_error">Could not unregister device on AirBop Server (%1$s).</string>

@@ -18,6 +18,8 @@ package com.airbop.client;
 //import static com.airbop.client.CommonUtilities.TAG;
 //import static com.airbop.client.CommonUtilities.displayMessage;
 
+import static com.airbop.client.CommonUtilities.displayMessage;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;

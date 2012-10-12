@@ -27,20 +27,21 @@ public class AirBopIntentService extends IntentService {
 		
 		Context appContext = getApplicationContext();
 		boolean registered = false;
+		boolean register_task = true;
 		if (appContext != null) {
 			registered = GCMRegistrar.isRegisteredOnServer(appContext);
 	       
 			Bundle extras = intent.getExtras();
 			String regID = null;
-			boolean bRegister = true;
+			
 			if (extras != null) {
 				regID = extras.getString(BUNDLE_REG_ID);
-				bRegister = extras. getBoolean(BUNDLE_REGISTRATION_TASK, true);
+				register_task = extras. getBoolean(BUNDLE_REGISTRATION_TASK, true);
 			}
 			
 			if (regID != null) {
 				
-				if (bRegister) {
+				if (register_task) {
 					if (!registered) {
 						AirBopServerData server_data = AirBopServerData.fillDefaults();
 				        server_data.loadCurrentLocation(appContext);
@@ -78,6 +79,8 @@ public class AirBopIntentService extends IntentService {
 		broadcastIntent.setAction(ACTION_REGISTRATION_PROCESSED);
 		broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
 		broadcastIntent.putExtra(BUNDLE_AIRBOP_SUCCESS, registered);
+		broadcastIntent.putExtra(BUNDLE_REGISTRATION_TASK, register_task);
+		
 		sendBroadcast(broadcastIntent);
 		
 	}
