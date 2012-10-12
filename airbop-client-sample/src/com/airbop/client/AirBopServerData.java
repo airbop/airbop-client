@@ -88,13 +88,6 @@ public class AirBopServerData {
 			
 			params.put(LATITUDE, latitude.toString());
 			params.put(LONGITUDE, longitude.toString());
-			
-			Log.d(TAG, "LAT float: " + latitude.toString());
-			Log.d(TAG, "LONG float: " + longitude.toString());
-			Log.d(TAG, "LAT Double: " + Double.toString(mLocation.getLatitude()));
-			Log.d(TAG, "LONG Double: " + Double.toString(mLocation.getLongitude()));
-			//params.put(LATITUDE, Double.toString(mLocation.getLatitude()));
-			//params.put(LONGITUDE, Double.toString(mLocation.getLongitude()));
 		}
 		
 		if (mCountry != null) {

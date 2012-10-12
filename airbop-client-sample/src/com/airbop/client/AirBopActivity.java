@@ -145,6 +145,7 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
 	    	 	
     	 		Intent intent = new Intent(this, AirBopIntentService.class);
 				intent.putExtra(AirBopIntentService.BUNDLE_REG_ID, regId);
+				intent.putExtra(AirBopIntentService.BUNDLE_REGISTRATION_TASK, true);
 									
 				mServiceRunning = true;
 				// Start Service		
@@ -161,7 +162,31 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
         // It's also necessary to cancel the thread onDestroy(),
         // hence the use of AsyncTask instead of a raw thread.
     	final Context appContext = getApplicationContext();
-    	
+    	displayMessage(appContext, "unRegister");
+    	if (mServiceRunning == false) {
+    		final String regId = GCMRegistrar.getRegistrationId(this);
+	    	// Only bother if we actually have a regID from GCM, otherwise
+	    	// there is nothing to unregister
+	        if (!regId.equals("")) {
+	    		if (mRegisterReceiver == null) {
+	    	 		// Register receiver
+					registerAirBopRegisterReceiver();
+	    	 	}
+	    	 	
+	    	 	
+		 		Intent intent = new Intent(this, AirBopIntentService.class);
+				intent.putExtra(AirBopIntentService.BUNDLE_REG_ID, regId);
+				intent.putExtra(AirBopIntentService.BUNDLE_REGISTRATION_TASK, false);
+									
+				mServiceRunning = true;
+				displayMessage(appContext, "startService");
+				// Start Service		
+				startService(intent);
+	        }
+    	} else {
+    		displayMessage(appContext, getString(R.string.unreg_thread_running));
+    	}
+    	/*
     	if (mUnRegisterTask == null) {
     		
 	    	final String regId = GCMRegistrar.getRegistrationId(this);
@@ -195,6 +220,7 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
     	} else {
     		displayMessage(appContext, getString(R.string.unreg_thread_running));
     	}
+    	*/
     }
 
     
