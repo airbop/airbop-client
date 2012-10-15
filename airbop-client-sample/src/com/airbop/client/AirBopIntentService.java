@@ -36,7 +36,7 @@ public class AirBopIntentService extends IntentService {
 			
 			if (extras != null) {
 				regID = extras.getString(BUNDLE_REG_ID);
-				register_task = extras. getBoolean(BUNDLE_REGISTRATION_TASK, true);
+				register_task = extras.getBoolean(BUNDLE_REGISTRATION_TASK, true);
 			}
 			
 			if (regID != null) {

@@ -84,7 +84,7 @@ A helper class that extends ‘android.app.Activity’ and provides a basic way 
 
 ###### [airbop-client-sample/src/com/airbop/client/AirBopIntentService.java](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/src/com/airbop/client/AirBopIntentService.java)
 
-A simple [IntentService](http://developer.android.com/reference/android/app/IntentService.html) that will register with the AirBop servers in a separate thread. It performs the same job as the AirBopRegisterTask class, but is useful if you wanted to perform the registration outside of an [Activity](http://developer.android.com/reference/android/app/Activity.html).
+A simple [IntentService](http://developer.android.com/reference/android/app/IntentService.html) that will register or unregister (based on the `REG_TASK` intent extra) with the AirBop servers in a separate thread. It performs the same job as the AirBopRegisterTask class, but is useful if you wanted to perform the registration outside of an [Activity](http://developer.android.com/reference/android/app/Activity.html).
 
 ###### [airbop-client-sample/src/com/airbop/client/AirBopRegisterTask.java](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/src/com/airbop/client/AirBopRegisterTask.java)
 
@@ -94,7 +94,7 @@ If you want to perform your registration outside of an Activity, might want to c
 
 ###### [airbop-client-sampl/src/com/airbop/client/AirBopServerData.java](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/src/com/airbop/client/AirBopRegisterTask.java)
 
-A simple helper data class used to pass data from the App to the ServerUtilities.register() function. <<MORE LATER>>
+A simple helper data class used to pass data from the App to the ServerUtilities.register() function. 
 
 ###### [airbop-client-sample/src/com/airbop/client/CommonUtilities.java](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/src/com/airbop/client/CommonUtilities.java)
 
@@ -187,13 +187,21 @@ The two character state or province code from the [USA](http://en.wikipedia.org/
 
 If the location data is not passed the server will attempt to fill in the data by performing an IP lookup on the device that posted the data. The location data that the AirBop server get's will be quite accurate (99.5% at a country level and 90% at a state level) so you will only need to provide your own data if you need greater accuracy.
 
+###### label (optional)
+
+A 50 character string that can be used to 'tag' or 'group' devices. You will be able to target devices based on this value when you send your message from the AirBop servers.
+
+For example if you wanted to label devices registrations from tablets vs. phones you could label the phones: `phone` and the tablets: `tablet`, or `standard` and `HD`. Then you would be able to target each group separately.
+
+###### Unregistering
+
 When you are unregistering only the `reg` and `app` parameters are needed.
 
 ## Ensure a Device is Connected
 
 Before you build and run the app, you must ensure you have either a physical device, or an Android Virtual Device running and connected. For more information on how to run an Android emulator, see [Managing Virtual Devices](http://developer.android.com/tools/devices/index.html) in the Android developer documentation.
 
-##  Build and Run the Sample App
+## Build and Run the Sample App
 
 You’re now ready to build the sample app and install it on the connected device. Select “Run > Run As > Android Application” from the Eclipse menu. When the app is run on the device, it will register the device on AirBop’s servers which will allow messages to be sent to it from your AirBop account.
 

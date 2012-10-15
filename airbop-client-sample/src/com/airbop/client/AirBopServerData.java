@@ -18,7 +18,7 @@ package com.airbop.client;
 //import static com.airbop.client.CommonUtilities.TAG;
 //import static com.airbop.client.CommonUtilities.displayMessage;
 
-import static com.airbop.client.CommonUtilities.displayMessage;
+//import static com.airbop.client.CommonUtilities.displayMessage;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -43,6 +43,7 @@ public class AirBopServerData {
 	public String mLanguage = null;
 	public String mCountry = null;
 	public String mState = null;
+	public String mLabel = "tester AND BEST";
 	
 	static final String LATITUDE = "lat";
 	static final String LONGITUDE = "long";
@@ -51,6 +52,7 @@ public class AirBopServerData {
 	static final String STATE = "state";
 	static final String REGISTRATION_ID = "reg";
 	static final String AIRBOP_KEY = "app";
+	static final String LABEL = "label";
 	
     private static final String PREFERENCES = "com.airbop.client.data";
 	
@@ -100,6 +102,12 @@ public class AirBopServerData {
 			params.put(STATE, mState);
 		}
 		
+		if (mLabel != null) {
+			params.put(LABEL, mLabel);
+		}
+		
+		
+		
 		/*if (mBuildModel != null) {
 			params.put(MODEL, mBuildModel);
 		}
@@ -133,7 +141,6 @@ public class AirBopServerData {
 						}
 					} 
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
