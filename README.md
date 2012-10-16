@@ -153,7 +153,7 @@ Line containing value to replace:
 
     static final String AIRBOP_APP_KEY = <<REPLACE_ME>>;
 
-Replace “<<REPLACE_ME>>” with your AirBop App Key, for example:
+Replace `<<REPLACE_ME>>` with your AirBop App Key, for example:
 
     static final String AIRBOP_APP_KEY = "3q158wj8-589d-5x94-a79y-8y1c04c3cb92";
     
