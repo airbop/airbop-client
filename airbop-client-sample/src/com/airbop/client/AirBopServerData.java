@@ -66,10 +66,7 @@ public class AirBopServerData {
 			Locale default_locale = Locale.getDefault();
 			if (default_locale != null) {
 				server_data.mLanguage = default_locale.toString();
-				server_data.mCountry = default_locale.getCountry();
-			}
-			
-			
+			}			
 		}
 		return server_data;
 	}
