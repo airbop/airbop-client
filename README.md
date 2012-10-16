@@ -135,19 +135,19 @@ Open the file containing the “CommonUtilities” class located in:
     airbop-client-sample/src/com/airbop/client/CommonUtilities.java
 
 ###### Step 2 – Enter your Project ID
-Locate the string constant definition named “PROJECT_ID” at the beginning of the class, and replace the text <<REPLACE_ME>> with your own Project ID you got from Google’s API console .
+Locate the string constant definition named "PROJECT_ID" at the beginning of the class, and replace the text `<<REPLACE_ME>>` with your own Project ID you got from Google’s API console .
 
 Line containing value to replace:
 
     static final String PROJECT_ID = <<REPLACE_ME>>;
 
-Replace “<<REPLACE_ME>>” with your Project ID, for example:
+Replace `<<REPLACE_ME>>` with your Project ID, for example:
 
     static final String PROJECT_ID = "918193457137";
 
 
 ###### Step 3 – Enter your AirBop App Key
-Locate the string constant definition named “AIRBOP_APP_KEY” at the beginning of the class, and replace the text <<REPLACE_ME>> with your AirBop App Key for the app that you previously added to your AirBop account.
+Locate the string constant definition named "AIRBOP_APP_KEY" at the beginning of the class, and replace the text `<<REPLACE_ME>>` with your AirBop App Key for the app that you previously added to your AirBop account.
 
 Line containing value to replace:
 
