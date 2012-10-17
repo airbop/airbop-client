@@ -70,7 +70,7 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
         //this client will attempt to reregister with AirBop. 
         GCMRegistrar.setRegisterOnServerLifespan(this, AIRBOP_DEFAULT_ON_SERVER_LIFESPAN_MS);
         
-        mServerData = AirBopServerData.fillDefaults();
+        mServerData = AirBopServerData.fillDefaults("");
     }
    
     protected void register(final boolean withLocation) {	
@@ -169,6 +169,7 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
         	
             // It's also necessary to cancel the thread onDestroy(),
             // hence the use of AsyncTask instead of a raw thread.        	
+    		mServerData.mRegId = regId;
     		mRegisterTask = new AirBopRegisterTask(this
     			 , getApplicationContext()
     			 , regId
@@ -226,8 +227,7 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
 			            protected Void doInBackground(Void... params) {
 			            	
 			                boolean unregistered = ServerUtilities.unregister(appContext
-			                        		, regId
-			                        		, AIRBOP_APP_KEY);
+			                        		, regId);
 			                // If this worked unregister from the GCM servers
 			                if ((unregistered) && (bUnregisterFromGCM)) {
 			                    GCMRegistrar.unregister(appContext);

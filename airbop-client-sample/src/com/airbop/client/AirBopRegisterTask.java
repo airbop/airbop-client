@@ -15,8 +15,6 @@
  */
 package com.airbop.client;
 
-import static com.airbop.client.CommonUtilities.AIRBOP_APP_KEY;
-
 import java.lang.ref.WeakReference;
 
 import com.google.android.gcm.GCMRegistrar;
@@ -29,24 +27,23 @@ public class AirBopRegisterTask extends AsyncTask<Void, Void, Void> {
 	private WeakReference<RegTaskCompleteListener> mListener;
 	private Context mAppContext = null; 
 	private AirBopServerData mServerData = null;
-	private String mRegId;
+	//private String mRegId;
 	
 	public AirBopRegisterTask(RegTaskCompleteListener listener
 			, final Context appContext
-			, final String redId
+			, final String regId
 			, AirBopServerData server_data) {
 		
 			mAppContext  = appContext;
-			mRegId = redId;
+			//mRegId = regId;
 			mServerData = server_data;
+			mServerData.mRegId = regId;
 			mListener = new WeakReference<RegTaskCompleteListener>(listener);
 		}
 	
 	@Override
 	protected Void doInBackground(Void... params) {
 		boolean registered = ServerUtilities.register(mAppContext
-            		, mRegId
-            		, AIRBOP_APP_KEY
             		, mServerData);
 	    // At this point all attempts to register with the AirBop
 	    // server failed, so we need to unregister the device

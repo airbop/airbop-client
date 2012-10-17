@@ -27,6 +27,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+
+
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -38,8 +40,9 @@ import android.widget.TextView;
 public class DemoActivity extends AirBopActivity {
 
     TextView mDisplay;
-   
- 
+    
+    //private static final String TAG = "DemoActivity";
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +51,10 @@ public class DemoActivity extends AirBopActivity {
         mDisplay = (TextView) findViewById(R.id.display);
         registerReceiver(mHandleMessageReceiver,
                 new IntentFilter(DISPLAY_MESSAGE_ACTION));
+        
+        
+        
+        
         // Call the register function in the AirBopActivity 
         register(USE_LOCATION);
         

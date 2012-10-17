@@ -16,8 +16,6 @@
  */
 package com.airbop.client;
 
-import static com.airbop.client.AirBopServerData.REGISTRATION_ID;
-import static com.airbop.client.AirBopServerData.AIRBOP_KEY;
 import static com.airbop.client.CommonUtilities.SERVER_URL;
 import static com.airbop.client.CommonUtilities.TAG;
 import static com.airbop.client.CommonUtilities.displayMessage;
@@ -29,15 +27,7 @@ import android.content.Context;
 import android.util.Log;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Random;
 
 import android.location.Criteria;
@@ -62,22 +52,22 @@ public final class ServerUtilities {
      * @return whether the registration succeeded or not.
      */
 	static boolean register(final Context context
-					, final String regId
-					, final String airBopId
 				    , final AirBopServerData server_data) {
 		if (context == null) {
 			return false;
 		}
 		
-		Log.i(TAG, "registering device (regId = " + regId + ")");
+		Log.i(TAG, "registering device (regId = " + server_data.mRegId + ")");
 		
-		String serverUrl = SERVER_URL + "/register";
+		String serverUrl = SERVER_URL + "register";
 		
-		Map<String, String> params = new HashMap<String, String>();
-		params.put(REGISTRATION_ID, regId);
-		params.put(AIRBOP_KEY, airBopId);
-		server_data.fillParams(params);
-		displayMessage(context, "Register Params: " + params);		
+		//Map<String, String> params = new HashMap<String, String>();
+		//params.put(REGISTRATION_ID, regId);
+		//params.put(AIRBOP_KEY, airBopId);
+		//server_data.fillParams(params);
+		//Log.d(TAG, "JSON BODY: " + server_data.getBody(true, true));
+		//displayMessage(context, "Register Params: " + params);		
+		
 		long backoff = BACKOFF_MILLI_SECONDS + random.nextInt(1000);
         // Once GCM returns a registration id, we need to register it in the
         // demo server. As the server might be down, we will retry it a couple
@@ -87,8 +77,9 @@ public final class ServerUtilities {
             try {
                 displayMessage(context, context.getString(
                         R.string.server_registering, i, MAX_ATTEMPTS));
-                
-                post(serverUrl, params);
+               
+                server_data.post(serverUrl, true, true);
+
                 // If we got here there was no exception so set
                 // the flag to true
                 GCMRegistrar.setRegisteredOnServer(context, true);
@@ -146,18 +137,16 @@ public final class ServerUtilities {
      * Unregister this account/device pair within the server.
      */
     static boolean unregister(final Context context
-    						, final String regId
-    						, final String airBopId) {
+    						, final String regId) {
         Log.i(TAG, "unregistering device (regId = " + regId + ")");
         displayMessage(context, context.getString(R.string.unregister_device));
-        String serverUrl = SERVER_URL + "/unregister";
-        Map<String, String> params = new HashMap<String, String>();
-        
-        params.put("app", airBopId);
-		params.put("reg", regId);
-		
+        String serverUrl = SERVER_URL + "unregister";
+        //Map<String, String> params = new HashMap<String, String>();  
+       // params.put("app", airBopId);
+		//params.put("reg", regId);
+        AirBopServerData server_data = new AirBopServerData(regId);
         try {
-        	post(serverUrl, params);
+        	server_data.post(serverUrl, false, true);
             // If there is no exception we've unregistered so set the flag
             // to false.
             GCMRegistrar.setRegisteredOnServer(context, false);
@@ -251,6 +240,7 @@ public final class ServerUtilities {
      *
      * @throws IOException propagated from POST.
      */
+    /*
     private static void post(String endpoint, Map<String, String> params)
             throws IOException {
         URL url;
@@ -303,6 +293,6 @@ public final class ServerUtilities {
             }
         }
       }
-    
+    	*/
     
 }

@@ -1,7 +1,5 @@
 package com.airbop.client;
 
-import static com.airbop.client.CommonUtilities.AIRBOP_APP_KEY;
-
 import com.google.android.gcm.GCMRegistrar;
 
 import android.app.IntentService;
@@ -43,12 +41,10 @@ public class AirBopIntentService extends IntentService {
 				
 				if (register_task) {
 					if (!registered) {
-						AirBopServerData server_data = AirBopServerData.fillDefaults();
+						AirBopServerData server_data = AirBopServerData.fillDefaults(regID);
 				        server_data.loadCurrentLocation(appContext);
 				        
 				        registered = ServerUtilities.register(appContext
-				        		, regID
-				        		, AIRBOP_APP_KEY
 				        		, server_data);
 					    // At this point all attempts to register with the AirBop
 					    // server failed, so we need to unregister the device
@@ -63,8 +59,7 @@ public class AirBopIntentService extends IntentService {
 				} else {
 					if (registered) {
 						registered = ServerUtilities.unregister(appContext
-                        		, regID
-                        		, AIRBOP_APP_KEY);
+                        		, regID);
 		                // If this worked unregister from the GCM servers
 		                if (registered) {
 		                    GCMRegistrar.unregister(appContext);
