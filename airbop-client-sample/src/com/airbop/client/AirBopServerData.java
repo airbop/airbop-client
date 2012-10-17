@@ -15,12 +15,6 @@
  */
 package com.airbop.client;
 
-//import static com.airbop.client.CommonUtilities.TAG;
-//import static com.airbop.client.CommonUtilities.displayMessage;
-
-//import static com.airbop.client.CommonUtilities.displayMessage;
-
-
 import static com.airbop.client.CommonUtilities.AIRBOP_APP_KEY;
 import static com.airbop.client.CommonUtilities.SECRET_KEY;
 
@@ -31,6 +25,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -104,7 +99,7 @@ public class AirBopServerData {
 		}
 		return server_data;
 	}
-
+/*
 	public void fillParams(Map<String, String> params) {
 		
 		Log.d(TAG, "LANGUAGE: " + mLanguage);
@@ -140,14 +135,10 @@ public class AirBopServerData {
 			params.put(REGISTRATION_ID, mRegId);
 		}
 	}
-
+*/
 	public void fillAlphaPairList(List<Pair<String, String>> list_params
 			, final boolean isRegister) {
 				
-		//if (mAppKey != null) {
-		//	list_params.add(Pair.create(AIRBOP_KEY, mAppKey));
-		//}
-		
 		if ((isRegister) && (mCountry != null)) {
 			list_params.add(Pair.create(COUNTRY, mCountry));
 		}
@@ -178,7 +169,65 @@ public class AirBopServerData {
 		
 	}
 	
-	public void loadCurrentLocation(Context context) {
+	public void loadDataFromPrefs(Context context) {
+		if (context != null) {
+			final SharedPreferences prefs = getPreferences(context);
+	    	
+	    	if(prefs != null) {
+	    		mLabel = prefs.getString(LABEL, null);
+	    		Log.v(TAG, "loadDataFromPrefs label: " + mLabel);
+	    		
+	    		String latitude = prefs.getString(LATITUDE, null);
+	    		String longitude = prefs.getString(LONGITUDE, null);
+	    		
+	    		if ((latitude != null) && (longitude != null)) {
+	    			mLocation = new Location("");
+	    			
+	    			mLocation.setLatitude(Double.valueOf(latitude));
+	    			mLocation.setLongitude(Double.valueOf(longitude));
+	    			
+	    			Geocoder gcd = new Geocoder(context, Locale.getDefault());
+	    			
+					try {
+						List<Address> addresses = gcd.getFromLocation(mLocation.getLatitude()
+								, mLocation.getLongitude()
+								, 1);
+						if (addresses.size() > 0) {
+							Address ad = addresses.get(0);
+							if (ad != null) {
+								mCountry = ad.getCountryCode();
+								mState = stateToStateCode(ad.getAdminArea());
+							}
+						} 
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+	    		}
+	    	}
+		}
+	}
+	
+	
+	
+	public void saveCurrentDataToPrefs(Context context) {
+		if (context != null) {
+			//writeLocationToPrefs(context, location);
+			final SharedPreferences prefs = getPreferences(context);
+	    	if(prefs != null) {
+	    		Editor editor = prefs.edit();
+	    		
+	            editor.putString(LATITUDE, Double.toString(mLocation.getLatitude()));
+	            editor.putString(LONGITUDE, Double.toString(mLocation.getLongitude()));
+	            editor.putString(LABEL, mLabel);
+	            
+	            editor.commit();
+	    	}
+		}
+	}
+	
+	
+	/*
+	 public void loadCurrentLocation(Context context) {
 		mLocation = null;
 		if (context != null) {
 			mLocation = readLocationFromPrefs(context);
@@ -220,6 +269,7 @@ public class AirBopServerData {
             editor.commit();
     	}
     }
+    
 	
 	public static Location readLocationFromPrefs(Context context){
     	final SharedPreferences prefs = getPreferences(context);
@@ -238,7 +288,7 @@ public class AirBopServerData {
     	}
     	return location;
     }
-	
+	*/
 	public static void clearLocationPrefs(Context context){
     	final SharedPreferences prefs = getPreferences(context);
     	if(prefs != null) {
@@ -333,14 +383,17 @@ public class AirBopServerData {
     
     public static String getCurrentTimestamp() {
     	
-    	String timestamp = "";
-    	Date date = new Date();
-        if (date != null) {
-        	SimpleDateFormat sdf = new SimpleDateFormat(OUTPUT_DATE_FORMAT, Locale.getDefault());
-        	sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        	timestamp = sdf.format(date);
-		}
-        return timestamp;
+        Log.v(TAG, "Current Timestamp " + System.currentTimeMillis() / 1000);
+        return Long.toString(System.currentTimeMillis() / 1000);
+       // System.currentTimeMillis()
+    	//String timestamp = "";
+    	//Date date = new Date();
+       // if (date != null) {
+        //	SimpleDateFormat sdf = new SimpleDateFormat(OUTPUT_DATE_FORMAT, Locale.getDefault());
+       // 	sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        //	timestamp = sdf.format(date);
+		//}
+        //return timestamp;
     }
     
     

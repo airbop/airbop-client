@@ -42,8 +42,9 @@ public class AirBopIntentService extends IntentService {
 				if (register_task) {
 					if (!registered) {
 						AirBopServerData server_data = AirBopServerData.fillDefaults(regID);
-				        server_data.loadCurrentLocation(appContext);
-				        
+				        //server_data.loadCurrentLocation(appContext);
+						server_data.loadDataFromPrefs(appContext);
+						
 				        registered = ServerUtilities.register(appContext
 				        		, server_data);
 					    // At this point all attempts to register with the AirBop

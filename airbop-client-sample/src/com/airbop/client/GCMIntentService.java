@@ -62,8 +62,9 @@ public class GCMIntentService extends GCMBaseIntentService {
         displayMessage(context, getString(R.string.gcm_registered)  + registrationId);
         //Get our data for the server
         AirBopServerData server_data = AirBopServerData.fillDefaults(registrationId);
-        server_data.loadCurrentLocation(context);
-        
+        //server_data.loadCurrentLocation(context);
+        server_data.loadDataFromPrefs(context);
+        displayMessage(context, "Label: " + server_data.mLabel);
         // Get rid of the location from the prefs so we requery next time
         AirBopServerData.clearLocationPrefs(context);
         ServerUtilities.register(getApplicationContext()

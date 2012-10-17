@@ -71,6 +71,7 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
         GCMRegistrar.setRegisterOnServerLifespan(this, AIRBOP_DEFAULT_ON_SERVER_LIFESPAN_MS);
         
         mServerData = AirBopServerData.fillDefaults("");
+        mServerData.mLabel = "AirBop Sample";
     }
    
     protected void register(final boolean withLocation) {	
@@ -86,14 +87,18 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
     			ServerUtilities.getCurrentLocation(this
 	    				, this);
     		} else {    			
-    			mServerData.saveCurrentLocation(getApplicationContext()
-    					, location);
+    			//mServerData.saveCurrentLocation(getApplicationContext()
+    			//		, location);
+    			mServerData.mLocation = location;
+    			mServerData.saveCurrentDataToPrefs(getApplicationContext());
     			//register
         		internalRegister();
     		}
     	} else {
     		//Remove any old location data
     		AirBopServerData.clearLocationPrefs(getApplicationContext());
+    		//Save the label if it's there
+    		mServerData.saveCurrentDataToPrefs(getApplicationContext());
     		//register
     		internalRegister();
     	}
@@ -292,8 +297,10 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
     			+ " longitude: " + location.getLongitude());
 			
 		//Set the location
-		mServerData.saveCurrentLocation(getApplicationContext()
-				, location);
+		//mServerData.saveCurrentLocation(getApplicationContext()
+		//		, location);
+		mServerData.mLocation = location;
+		mServerData.saveCurrentDataToPrefs(getApplicationContext());
 		//register
 		internalRegister();
 		
