@@ -45,11 +45,11 @@
     <item android:id="@+id/options_register" 
         android:title="@string/options_register"> 
     </item>
-    <item android:id="@+id/options_unregister_gcm" 
+    <!--<item android:id="@+id/options_unregister_gcm" 
         android:title="@string/options_unregister_gcm"> 
     </item>
     <item android:id="@+id/options_unregister_airbop" 
         android:title="@string/options_unregister_airbop"> 
     </item>
-
+	-->
 </menu>

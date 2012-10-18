@@ -92,9 +92,9 @@ An [AsyncTask](http://developer.android.com/reference/android/os/AsyncTask.html)
 
 If you want to perform your registration outside of an Activity, might want to consider using the AirBopIntentService class.
 
-###### [airbop-client-sampl/src/com/airbop/client/AirBopServerData.java](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/src/com/airbop/client/AirBopRegisterTask.java)
+###### [airbop-client-sampl/src/com/airbop/client/AirBopServerUtilities.java](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/src/com/airbop/client/AirBopServerUtilities.java)
 
-A simple helper data class used to pass data from the App to the ServerUtilities.register() function. 
+A simple helper data class used to store data, register and unregister with the AirBop servers. 
 
 ###### [airbop-client-sample/src/com/airbop/client/CommonUtilities.java](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/src/com/airbop/client/CommonUtilities.java)
 
@@ -107,10 +107,6 @@ This is the sample application’s main activity.
 ###### [airbop-client-sample/src/com/airbop/client/GCMIntentService.java](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/src/com/airbop/client/GCMIntentService.java)
 
 This is the intent service class with the required overridden callback methods called by the Broadcast Receiver.
-
-###### [airbop-client-sample/src/com/airbop/client/ServerUtilities.java](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/src/com/airbop/client/ServerUtilities.java)
-
-A helper class containing static functions that will perform the registration and unregistration actions with the AirBop servers.
 
 ###### [airbop-client-sample/AndroidManifest.xml](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/AndroidManifest.xml)
 
@@ -147,7 +143,7 @@ Replace `<<REPLACE_ME>>` with your Project ID, for example:
 
 
 ###### Step 3 – Enter your AirBop App Key
-Locate the string constant definition named "AIRBOP_APP_KEY" at the beginning of the class, and replace the text `<<REPLACE_ME>>` with your AirBop App Key for the app that you previously added to your AirBop account.
+Locate the string constant definition named "AIRBOP_APP_KEY" at the beginning of the class, and replace the text `<<REPLACE_ME>>` with your AirBop App Key for the app that you previously added to your AirBop account. This value can be found on your app's "Info" and "Edit" tabs.
 
 Line containing value to replace:
 
@@ -157,16 +153,49 @@ Replace `<<REPLACE_ME>>` with your AirBop App Key, for example:
 
     static final String AIRBOP_APP_KEY = "3q158wj8-589d-5x94-a79y-8y1c04c3cb92";
     
+###### Step 4 – Enter your AirBop App Secret
+Locate the string constant definition named "AIRBOP_APP_SECRET" near the beginning of the class, and replace the text `<<REPLACE_ME>>` with your AirBop App Secret for the app that you previously added to your AirBop account. This value can be found on your app's "Info" and "Edit" tabs.
+
+Line containing value to replace:
+
+    static final String AIRBOP_APP_SECRET = <<REPLACE_ME>>;
+
+Replace `<<REPLACE_ME>>` with your AirBop App Secret, for example:
+
+    static final String AIRBOP_APP_SECRET = "3c4643055d38b7da8c175afe6288bThisIsNotARealSecret";
+
+## Required Headers
+
+When registering or unregistering with the AirBop servers the following headers are required:
+
+* x-app-key
+* x-timestamp
+* x-signature
+
+They are defined as follows:
+
+###### x-timestamp
+The timestamp of the message. Sent as the number of seconds since the Epoch, January 1, 1970 00:00 UTC.
+
+###### x-app-key
+Your AirBop App Key, which is created automatically by AirBop when you create a new app. It is shown on your app's "Info" and "Edit" tabs.
+
+###### x-signature
+An SHA256 hash constructed exactly as follows:
+
+    "POST" + request_uri + AIRBOP_APP_KEY + timestamp + request.body + AIRBOP_APP_SECRET
+
+An example implementation of this can be found in the `AirBopServerUtilities.java` class. Specifically the `constructSignatureURI` and `computeHash` functions.
+   
 ## What is sent to the AirBop Servers
 
-When you run the AirBop client application the following information can be sent to the server as part of the post parameters during the registration process:
+When you run the AirBop client application the following information can be sent to the server as part of the post parameters during the registration process. The request body is sent in the JSON format. Examples of how to construct the request boy and post to the AirBop servers can be found in the `AirBopServerUtilities.java` class.
 
-###### reg
-The registration ID received from the GCM servers. Described by in the [GCM Architectural Overview](http://developer.android.com/guide/google/gcm/gcm.html). You can get load this value from the GCM jar using the following: 
-    GCMRegistrar.getRegistrationId(appContext); 
+###### country (optional)
+The [ISO 3166-1 alpha-2 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#Officially_assigned_code_elements). This must be exactly two characters or it will be ignored.
 
-###### app
-Your AirBop application key. You can read more about this on the [AirBop website](http://www.airbop.com/tutorials/getting-started).
+###### label (optional)
+This is a 50 character string that can be used to 'tag' or 'group' devices.
 
 ###### lat (optional)
 The latitude value of the device. Stored as a float and accurate to one city block.
@@ -179,8 +208,9 @@ The [ISO639-1 language code](http://en.wikipedia.org/wiki/List_of_ISO_639-1_code
     Locale.getDefault().toString();
 Only the first two characters of the locale will be stored.
  
-###### country (optional)
-The [ISO 3166-1 alpha-2 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#Officially_assigned_code_elements). This must be exactly two characters or it will be ignored.
+###### reg
+The registration ID received from the GCM servers. Described by in the [GCM Architectural Overview](http://developer.android.com/guide/google/gcm/gcm.html). You can get load this value from the GCM jar using the following: 
+    GCMRegistrar.getRegistrationId(appContext); 
 
 ###### state (optional)
 The two character state or province code from the [USA](http://en.wikipedia.org/wiki/List_of_U.S._state_abbreviations#PUSPS) or [Canada](http://en.wikipedia.org/wiki/Canadian_subnational_postal_abbreviations). This must be exactly two characters or it will be ignored.
