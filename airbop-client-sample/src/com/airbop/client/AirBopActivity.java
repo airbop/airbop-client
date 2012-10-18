@@ -16,6 +16,7 @@
 package com.airbop.client;
 
 import static com.airbop.client.CommonUtilities.AIRBOP_APP_KEY;
+import static com.airbop.client.CommonUtilities.AIRBOP_APP_SECRET;
 import static com.airbop.client.CommonUtilities.PROJECT_ID;
 import static com.airbop.client.CommonUtilities.SERVER_URL;
 import static com.airbop.client.CommonUtilities.USE_SERVICE;
@@ -32,6 +33,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -49,7 +51,7 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
   
     private AirBopRegisterTask  mRegisterTask = null;
     private AsyncTask<Void, Void, Void> mUnRegisterTask = null;
-    protected AirBopServerData mServerData = null;
+    protected AirBopServerUtilities mServerData = null;
     private AirBopRegisterReceiver mRegisterReceiver = null;
     protected boolean mServiceRunning = false;
     
@@ -57,7 +59,8 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         checkNotNull(SERVER_URL, "SERVER_URL");
-        checkNotNull(AIRBOP_APP_KEY, "AIRBOP_APP_KEY");
+        checkNotNull(AIRBOP_APP_KEY, "APP_KEY");
+        checkNotNull(AIRBOP_APP_SECRET, "APP_SECRET");
         // Make sure the device has the proper dependencies.
         GCMRegistrar.checkDevice(this);
         
@@ -70,7 +73,7 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
         //this client will attempt to reregister with AirBop. 
         GCMRegistrar.setRegisterOnServerLifespan(this, AIRBOP_DEFAULT_ON_SERVER_LIFESPAN_MS);
         
-        mServerData = AirBopServerData.fillDefaults("");
+        mServerData = AirBopServerUtilities.fillDefaults("");
         mServerData.mLabel = "AirBop Sample";
     }
    
@@ -78,13 +81,13 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
     	
     	if (withLocation) {
     		
-    		Location location = ServerUtilities.getLastLocation(this);
+    		Location location = getLastLocation(this);
     		if (location == null) {
     			// We didn't get the location
     			displayMessage(this, "Going to get current location.");
     			// We have to query the Location Manager for the location
     			// and get the result in onLocationChanged
-    			ServerUtilities.getCurrentLocation(this
+    			getCurrentLocation(this
 	    				, this);
     		} else {    			
     			//mServerData.saveCurrentLocation(getApplicationContext()
@@ -96,7 +99,7 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
     		}
     	} else {
     		//Remove any old location data
-    		AirBopServerData.clearLocationPrefs(getApplicationContext());
+    		AirBopServerUtilities.clearLocationPrefs(getApplicationContext());
     		//Save the label if it's there
     		mServerData.saveCurrentDataToPrefs(getApplicationContext());
     		//register
@@ -231,7 +234,7 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
 			            @Override
 			            protected Void doInBackground(Void... params) {
 			            	
-			                boolean unregistered = ServerUtilities.unregister(appContext
+			                boolean unregistered = AirBopServerUtilities.unregister(appContext
 			                        		, regId);
 			                // If this worked unregister from the GCM servers
 			                if ((unregistered) && (bUnregisterFromGCM)) {
@@ -254,7 +257,75 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
     	}
     }
 
+    /************************
+     * Language helpers
+     */
     
+    /**
+     * Simple helper that gets the location criteria that we want. 
+     * @return
+     */
+    public static Criteria getCriteria() {
+    	
+    	Criteria criteria = new Criteria();
+	    criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+	    criteria.setPowerRequirement(Criteria.POWER_LOW);
+	    criteria.setAltitudeRequired(false);
+	    criteria.setBearingRequired(false);
+	    criteria.setSpeedRequired(false);
+	    criteria.setCostAllowed(true);
+	    
+	    return criteria;
+    }
+    
+    /**
+     * Get the last location from the LocationManager, if it's available, if not
+     * return null.
+     * @param appContext
+     * @return
+     */
+    public static Location getLastLocation(final Context appContext) {
+    	Location location = null;
+    	Criteria criteria = getCriteria();
+    	LocationManager locationManager = (LocationManager)appContext.getSystemService(Context.LOCATION_SERVICE);
+	    if (locationManager != null) {
+	    	String provider = locationManager.getBestProvider(criteria, true);
+		    location = locationManager.getLastKnownLocation(provider); 
+		    
+		    if (location != null) {
+		    	displayMessage(appContext, "Got last location latitude: " 
+ 		    			+ location.getLatitude()
+ 		    			+ " longitude: " + location.getLongitude());
+		    }
+    	}
+	    
+	    return location;
+    }
+    
+    /** 
+     * Get the current location from the location manager, and when we get it
+     * post that information to the Airbop servers
+     * @param appContext
+     * @param regId
+     * @return
+     */
+    public static boolean getCurrentLocation(LocationListener locationListener
+    		, final Context appContext
+    		) {
+    	
+    	Criteria criteria = getCriteria();
+    	LocationManager locationManager = (LocationManager)appContext.getSystemService(Context.LOCATION_SERVICE);
+	    if (locationManager != null) {
+	    	String provider = locationManager.getBestProvider(criteria, true);
+	    	
+    		locationManager.requestLocationUpdates(provider, 2000, 10,
+                    locationListener);    
+    		// We've posted so let the caller know
+    		return true;
+	    }
+	    // We couldn't get the location manager so let the caller know
+	    return false;
+    }
     
     @Override
     protected void onDestroy() {

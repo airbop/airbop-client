@@ -61,13 +61,13 @@ public class GCMIntentService extends GCMBaseIntentService {
         Log.i(TAG, "Device registered: regId = " + registrationId);
         displayMessage(context, getString(R.string.gcm_registered)  + registrationId);
         //Get our data for the server
-        AirBopServerData server_data = AirBopServerData.fillDefaults(registrationId);
+        AirBopServerUtilities server_data = AirBopServerUtilities.fillDefaults(registrationId);
         //server_data.loadCurrentLocation(context);
         server_data.loadDataFromPrefs(context);
         displayMessage(context, "Label: " + server_data.mLabel);
         // Get rid of the location from the prefs so we requery next time
-        AirBopServerData.clearLocationPrefs(context);
-        ServerUtilities.register(getApplicationContext()
+        AirBopServerUtilities.clearLocationPrefs(context);
+        AirBopServerUtilities.register(getApplicationContext()
     			, server_data);
     }
 
@@ -83,7 +83,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         displayMessage(context, getString(R.string.gcm_unregistered));
       //If we are still registered with AirBop it is time to unregister
         if (GCMRegistrar.isRegisteredOnServer(context)) {
-        	ServerUtilities.unregister(context, registrationId);
+        	AirBopServerUtilities.unregister(context, registrationId);
         } else {
             // This callback results from the call to unregister made on
             // ServerUtilities when the registration to the server failed.

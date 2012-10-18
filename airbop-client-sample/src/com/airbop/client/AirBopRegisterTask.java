@@ -26,13 +26,13 @@ public class AirBopRegisterTask extends AsyncTask<Void, Void, Void> {
 	
 	private WeakReference<RegTaskCompleteListener> mListener;
 	private Context mAppContext = null; 
-	private AirBopServerData mServerData = null;
+	private AirBopServerUtilities mServerData = null;
 	//private String mRegId;
 	
 	public AirBopRegisterTask(RegTaskCompleteListener listener
 			, final Context appContext
 			, final String regId
-			, AirBopServerData server_data) {
+			, AirBopServerUtilities server_data) {
 		
 			mAppContext  = appContext;
 			//mRegId = regId;
@@ -43,7 +43,7 @@ public class AirBopRegisterTask extends AsyncTask<Void, Void, Void> {
 	
 	@Override
 	protected Void doInBackground(Void... params) {
-		boolean registered = ServerUtilities.register(mAppContext
+		boolean registered = AirBopServerUtilities.register(mAppContext
             		, mServerData);
 	    // At this point all attempts to register with the AirBop
 	    // server failed, so we need to unregister the device

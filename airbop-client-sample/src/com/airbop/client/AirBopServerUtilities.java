@@ -1,5 +1,6 @@
 /*
  * Copyright 2012 Indigo Rose Software Design Corporation
+ * Copyright 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,30 +17,34 @@
 package com.airbop.client;
 
 import static com.airbop.client.CommonUtilities.AIRBOP_APP_KEY;
-import static com.airbop.client.CommonUtilities.SECRET_KEY;
+import static com.airbop.client.CommonUtilities.AIRBOP_APP_SECRET;
+import static com.airbop.client.CommonUtilities.SERVER_URL;
+import static com.airbop.client.CommonUtilities.TAG;
+import static com.airbop.client.CommonUtilities.displayMessage;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
+import java.util.Random;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.location.Address;
+import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 //import android.os.Build;
 import android.util.Log;
 import android.util.Pair;
@@ -48,49 +53,56 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class AirBopServerData {
+import com.google.android.gcm.GCMRegistrar;
+
+public class AirBopServerUtilities {
 	
-	private static final String TAG = "AirBopServerData";
+	private static final String TAG = "AirBopServerUtilities";
 	
-	//Post Params
+	//Post Param values
 	public Location mLocation = null;
 	public String mLanguage = null;
 	public String mCountry = null;
 	public String mState = null;
 	public String mLabel = null;
-	//public String mAppKey = AIRBOP_APP_KEY;
 	public String mRegId = null;
+	//Post Param keys
+	static final String COUNTRY = "country";
+	static final String LABEL = "label";
+	static final String LANGUAGE = "lang";
+	static final String LATITUDE = "lat";
+	static final String LONGITUDE = "long";
+	static final String REGISTRATION_ID = "reg";
+	static final String STATE = "state";
 	
-	//Headers
-	static final String HEADER_TIMESTAMP = "x-timestamp";
+	//Header keys
 	static final String HEADER_APP = "x-app-key";
+	static final String HEADER_TIMESTAMP = "x-timestamp";
 	static final String HEADER_SIGNATURE = "x-signature";
 	
 	
-	static final String LATITUDE = "lat";
-	static final String LONGITUDE = "long";
-	static final String LANGUAGE = "lang";
-	static final String COUNTRY = "country";
-	static final String STATE = "state";
-	static final String REGISTRATION_ID = "reg";
-	//static final String APP_KEY = "app";
-	static final String LABEL = "label";
-	
-	
-	
+	private static final int MAX_ATTEMPTS = 5;
+    private static final int BACKOFF_MILLI_SECONDS = 2000;
+    private static final Random random = new Random();
     private static final String PREFERENCES = "com.airbop.client.data";
     public static final String OUTPUT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss z";
     
-	public AirBopServerData() {
+	public AirBopServerUtilities() {
 		
 	}
 	
-	public AirBopServerData(final String regId) {
+	public AirBopServerUtilities(final String regId) {
 		mRegId = regId;
 	}
 	
-	public static AirBopServerData fillDefaults(final String regId) {
-		AirBopServerData server_data = new AirBopServerData(regId);
+	/**
+	 * Static helper function that creates a AirBopServerData instance and
+	 * populates it with the default data. For now this is the language.
+	 * @param regId Registration ID that we will store in the created instance.
+	 * @return AirBopServerData
+	 */
+	public static AirBopServerUtilities fillDefaults(final String regId) {
+		AirBopServerUtilities server_data = new AirBopServerUtilities(regId);
 		if (server_data != null) {
 			Locale default_locale = Locale.getDefault();
 			if (default_locale != null) {
@@ -99,43 +111,14 @@ public class AirBopServerData {
 		}
 		return server_data;
 	}
-/*
-	public void fillParams(Map<String, String> params) {
-		
-		Log.d(TAG, "LANGUAGE: " + mLanguage);
-		Log.d(TAG, "Location: " + mLocation);
-		Log.d(TAG, "COUNTRY: " + mCountry);
-		Log.d(TAG, "STATE: " + mState);
-		
-		if (mCountry != null) {
-			params.put(COUNTRY, mCountry);
-		}
-		
-		if (mLabel != null) {
-			params.put(LABEL, mLabel);
-		}
-		
-		if (mLanguage != null) {
-			params.put(LANGUAGE, mLanguage);
-		}
-		
-		if (mLocation != null) {
-			Float latitude = Float.valueOf(Double.toString(mLocation.getLatitude()));
-			Float longitude = Float.valueOf(Double.toString(mLocation.getLongitude()));
-		
-			params.put(LATITUDE, latitude.toString());
-			params.put(LONGITUDE, longitude.toString());
-		}
-		
-		if (mState != null) {
-			params.put(STATE, mState);
-		}
-		
-		if (mRegId != null) {
-			params.put(REGISTRATION_ID, mRegId);
-		}
-	}
-*/
+	
+	/**
+	 * Fill a list with the current data values in alphabetical order. Used to construct
+	 * the body when posting.
+	 * @param list_params Will be filled with the data. A list of pairs.
+	 * @param isRegister Is this a registration or an unregistration? This controls
+	 * which parameters will be added to the list.
+	 */
 	public void fillAlphaPairList(List<Pair<String, String>> list_params
 			, final boolean isRegister) {
 				
@@ -159,16 +142,31 @@ public class AirBopServerData {
 			list_params.add(Pair.create(LONGITUDE, longitude.toString()));
 		}
 		
-		if ((isRegister) && (mState != null)) {
-			list_params.add(Pair.create(STATE, mState));
-		}
-		
 		if (mRegId != null) {
 			list_params.add(Pair.create(REGISTRATION_ID, mRegId));
 		}
 		
+		if ((isRegister) && (mState != null)) {
+			list_params.add(Pair.create(STATE, mState));
+		}
 	}
 	
+	/***************************************************
+	 * START: Preference work
+	 ***************************************************/
+	/**
+	 * Helper function to get the shared prefs
+	 * @param context Context used to get the prefs
+	 */
+	private static SharedPreferences getPreferences(Context context) {
+        return context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+    }
+	/**
+	 * Load the necessary data from the prefs. We will load the label,
+	 * latitude, and the longitude. The lat and long will be converted
+	 * into a location object and used to set the country and state.
+	 * @param context Context used to get the prefs
+	 */
 	public void loadDataFromPrefs(Context context) {
 		if (context != null) {
 			final SharedPreferences prefs = getPreferences(context);
@@ -207,8 +205,12 @@ public class AirBopServerData {
 		}
 	}
 	
-	
-	
+	/**
+	 * Save the current server data to the prefs so that the
+	 * intent service can read them. We store the label, latitude,
+	 * and the longitude.
+	 * @param context Context needed to access the preferences
+	 */
 	public void saveCurrentDataToPrefs(Context context) {
 		if (context != null) {
 			//writeLocationToPrefs(context, location);
@@ -224,71 +226,10 @@ public class AirBopServerData {
 	    	}
 		}
 	}
-	
-	
-	/*
-	 public void loadCurrentLocation(Context context) {
-		mLocation = null;
-		if (context != null) {
-			mLocation = readLocationFromPrefs(context);
-			if (mLocation != null) {
-				Geocoder gcd = new Geocoder(context, Locale.getDefault());
-	
-				try {
-					List<Address> addresses = gcd.getFromLocation(mLocation.getLatitude()
-							, mLocation.getLongitude()
-							, 1);
-					if (addresses.size() > 0) {
-						Address ad = addresses.get(0);
-						if (ad != null) {
-							mCountry = ad.getCountryCode();
-							mState = stateToStateCode(ad.getAdminArea());
-						}
-					} 
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-	
-	public void saveCurrentLocation(Context context, Location location) {
-		mLocation = location;
-		if (context != null) {
-			writeLocationToPrefs(context, location);
-		}
-	}
-	
-	public static void writeLocationToPrefs(Context context, Location location){
-    	final SharedPreferences prefs = getPreferences(context);
-    	if(prefs != null) {
-    		
-    		Editor editor = prefs.edit();
-            editor.putString(LATITUDE, Double.toString(location.getLatitude()));
-            editor.putString(LONGITUDE, Double.toString(location.getLongitude()));
-            editor.commit();
-    	}
-    }
-    
-	
-	public static Location readLocationFromPrefs(Context context){
-    	final SharedPreferences prefs = getPreferences(context);
-    	Location location = null;
-    	if(prefs != null) {
-    		
-    		String latitude = prefs.getString(LATITUDE, null);
-    		String longitude = prefs.getString(LONGITUDE, null);
-    		
-    		if ((latitude != null) && (longitude != null)) {
-    			location = new Location("");
-    			
-    			location.setLatitude(Double.valueOf(latitude));
-    			location.setLongitude(Double.valueOf(longitude));
-    		}
-    	}
-    	return location;
-    }
-	*/
+	/**
+	 * Remove the location data from the preferences
+	 * @param context The context needed to get the shared prefs
+	 */
 	public static void clearLocationPrefs(Context context){
     	final SharedPreferences prefs = getPreferences(context);
     	if(prefs != null) {
@@ -299,11 +240,15 @@ public class AirBopServerData {
             editor.commit();
     	}
     }
+	/***************************************************
+	 * END: Preference work
+	 ***************************************************/
     
-    private static SharedPreferences getPreferences(Context context) {
-        return context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
-    }
-    
+	/**
+     * Convert the name of a state to a state abbreviation
+     * @param state The full name of the state
+     * @return whether the registration succeeded or not.
+     */
     public static String stateToStateCode(final String state) {
 	    Map<String, String> states = new HashMap<String, String>();
 	    states.put("Alabama","AL");
@@ -381,22 +326,22 @@ public class AirBopServerData {
 	    return states.get(state);
     }
     
+    /**
+     * Calculate the current timestamp since the Epoch, January 1, 1970 00:00 UTC.
+     * @return The current timestamp in seconds
+     */
     public static String getCurrentTimestamp() {
-    	
-        Log.v(TAG, "Current Timestamp " + System.currentTimeMillis() / 1000);
         return Long.toString(System.currentTimeMillis() / 1000);
-       // System.currentTimeMillis()
-    	//String timestamp = "";
-    	//Date date = new Date();
-       // if (date != null) {
-        //	SimpleDateFormat sdf = new SimpleDateFormat(OUTPUT_DATE_FORMAT, Locale.getDefault());
-       // 	sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        //	timestamp = sdf.format(date);
-		//}
-        //return timestamp;
     }
     
-    
+    /**
+     * Construct the URL for the signature header
+     * @param method The method being use to contact the header. POST for now.
+     * @param url The URL we are going to contact.
+     * @param timestamp The timestamp of the message
+     * @param body The body that we will be sending
+     * @return The created URI.
+     */
     private String constructSignatureURI(
     		final String method
     		, final String url
@@ -415,91 +360,18 @@ public class AirBopServerData {
     	// body
     	uriBuilder.append(body);
     	// ssssshhhhhh
-    	uriBuilder.append(SECRET_KEY);
+    	uriBuilder.append(AIRBOP_APP_SECRET);
     	
     	return uriBuilder.toString();
     	
     }
     
-    /*
-    public void addHeadersToConnection(HttpURLConnection connection
-    		, final String url
-    		, final boolean isRegister) {
-    	//if (connection == null){
-    		//ERROR
-    	//	return;
-    	//}
-    	List<String> list_headers = new ArrayList<String>();
-    	List<String> list_params = new ArrayList<String>();
-    	
-    	//X-Headers
-    	//Get the time stamp
-    	mTimeStamp = getCurrentTimestamp();
-    	list_headers.add(mTimeStamp);
-    	
-    	//Post Params
-    	if (mAppKey != null) {
-    		list_params.add(mAppKey);
-		}
-		
-		if ((isRegister) && (mCountry != null)) {
-			list_params.add(mCountry);
-		}
-		
-		if ((isRegister) && (mLabel != null)) {
-			list_params.add(mLabel);
-		}
-		
-		if ((isRegister) && (mLanguage != null)) {
-			list_params.add(mLanguage);
-		}
-		
-		if ((isRegister) && (mLocation != null)) {
-			Float latitude = Float.valueOf(Double.toString(mLocation.getLatitude()));
-			Float longitude = Float.valueOf(Double.toString(mLocation.getLongitude()));
-		
-			list_params.add(latitude.toString());
-			list_params.add(longitude.toString());
-		}
-		
-		if ((isRegister) && (mState != null)) {
-			list_params.add(mState);
-		}
-		
-		if (mRegId != null) {
-			list_params.add(mRegId);
-		}
-		
-		String signature_uri = getRegisterURI(url
-				, list_headers
-				, list_params);
-		
-		Log.i(TAG, "sig URI = " + signature_uri);
-    }
-    */
-    /*
-    public String getRegisterURI( final String url
-    		, List<String> list_headers
-    		, List<String> list_params) {
-    	StringBuilder uriBuilder = new StringBuilder();
-    	uriBuilder.append(url);
-    	
-    	
-    	//Alpha x-headers
-    	for (String header : list_headers) {
-    		uriBuilder.append(":");
-    		uriBuilder.append(header);	
-    	}
-
-    	//Alpha post params
-    	for (String post_param : list_params) {
-    		uriBuilder.append(":");
-    		uriBuilder.append(post_param);	
-    	}
-    	return uriBuilder.toString();
-    }
-    */
-    
+    /**
+     * Get the body to post to the server as JSON.  
+     * @param isRegister Is this a registration or an unregistration? Controls
+     * the parameters that will be in the body
+     * @return The body to post.
+     */
     public String getBodyAsJSON(final boolean isRegister){
     	List<Pair<String, String>> list_params = new ArrayList<Pair<String, String>>();
     	fillAlphaPairList(list_params, isRegister);
@@ -528,6 +400,12 @@ public class AirBopServerData {
         return bodyBuilder.toString();
     }
     
+    /**
+     * Get the body to post to the server as A url encoded string. 
+     * @param isRegister Is this a registration or an unregistration? Controls
+     * the parameters that will be in the body
+     * @return The body to post.
+     */
     public String getBodyAsUrlEncoded(final boolean isRegister){
     	List<Pair<String, String>> list_params = new ArrayList<Pair<String, String>>();
     	fillAlphaPairList(list_params, isRegister);
@@ -548,6 +426,12 @@ public class AirBopServerData {
         return bodyBuilder.toString();
     }
     
+    /**
+     * Get the Body to post to the sever
+     * @param isRegister A registration or uneregistration?
+     * @param asJSON Do we want a JSON body or a url encoded body?
+     * @return The body
+     */
     public String getBody(final boolean isRegister
 						, final boolean asJSON) {
     	if (asJSON) {
@@ -557,8 +441,13 @@ public class AirBopServerData {
     	}
     }
     
-    
-    
+    /**
+     * computes the SHA-256 hash of a string
+     * @param input The string to hash
+     * @return The hashed string
+     * @throws NoSuchAlgorithmException
+     * @throws UnsupportedEncodingException
+     */
     public String computeHash(String input) throws NoSuchAlgorithmException, UnsupportedEncodingException{
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         digest.reset();
@@ -573,12 +462,11 @@ public class AirBopServerData {
     }
     
     /**
-     * Issue a POST request to the server.
-     *
-     * @param endpoint POST address.
-     * @param params request parameters.
-     *
-     * @throws IOException propagated from POST.
+     * Issue a POST request to the AirBop server.
+     * @param url_endpoint The URL to post to 
+     * @param isRegister IS this a registration or unregistration?
+     * @param asJSON Do we want the post body as JSON or URL encoded
+     * @throws IOException
      */
     public void post(String url_endpoint
 			, final boolean isRegister
@@ -654,6 +542,128 @@ public class AirBopServerData {
             }
         }
       }
-     
+    
+    /**
+     * Attempt to register with the AirBop servers
+     * @param context Just used for messages
+     * @param server_data Server data containing info to register
+     * with
+     * @return success or failure
+     */
+    static boolean register(final Context context
+		    , final AirBopServerUtilities server_data) {
+		if (context == null) {
+			return false;
+		}
+		
+		Log.i(TAG, "registering device (regId = " + server_data.mRegId + ")");
+		
+		String serverUrl = SERVER_URL + "register";
+		
+		long backoff = BACKOFF_MILLI_SECONDS + random.nextInt(1000);
+		// Once GCM returns a registration id, we need to register it in the
+		// demo server. As the server might be down, we will retry it a couple
+		// times.
+		for (int i = 1; i <= MAX_ATTEMPTS; i++) {
+		    Log.d(TAG, "Attempt #" + i + " to register");
+		    try {
+		        displayMessage(context, context.getString(
+		                R.string.server_registering, i, MAX_ATTEMPTS));
+		       
+		        server_data.post(serverUrl, true, true);
+		
+		        // If we got here there was no exception so set
+		        // the flag to true
+		        GCMRegistrar.setRegisteredOnServer(context, true);
+		        displayMessage(context, context.getString(R.string.server_registered));
+		        long lifespan = GCMRegistrar.getRegisterOnServerLifespan(context);
+		        long expirationTime = System.currentTimeMillis() + lifespan;
+		        
+		        displayMessage(context, "Registration expires on: "+ new Timestamp(expirationTime));
+		        return true;
+		        
+		    } catch (IOException e) {
+		        /*if (e.getMessage().equals("409")) {
+		        	displayMessage(context
+		        			, context.getString(R.string.already_registered));
+		        	return true;
+		        } */
+		    	String error_msg = e.getMessage();
+		    	int error_code = 0;
+		    	if (error_msg != null) {
+		    		error_code = Integer.valueOf(error_msg);
+		    	}
+		    	            	
+		    	if ((error_code >= 400) && (error_code <= 499)) {
+		        	displayMessage(context
+		        			, context.getString(R.string.request_error, error_code));
+		        	return false;
+		        } else {
+		        	
+		        	displayMessage(context
+		        			, context.getString(R.string.airbop_server_reg_failed, e));
+		        	
+		        	// Here we are simplifying and retrying on any error; in a real
+		            // application, it should retry only on unrecoverable errors
+		            // (like HTTP error code 503).
+		            Log.e(TAG, "Failed to register on attempt " + i, e);
+		            if (i == MAX_ATTEMPTS) {
+		                break;
+		            }
+		            try {
+		                Log.d(TAG, "Sleeping for " + backoff + " ms before retry");
+		                Thread.sleep(backoff);
+		            } catch (InterruptedException e1) {
+		                // Activity finished before we complete - exit.
+		                Log.d(TAG, "Thread interrupted: abort remaining retries!");
+		                Thread.currentThread().interrupt();
+		                return false;
+		            }
+		            // increase backoff exponentially
+		            backoff *= 2;
+		        }
+		    }
+		}
+		String message = context.getString(R.string.server_register_error,
+		        MAX_ATTEMPTS);
+		displayMessage(context, message);
+		return false;
+	}
+    
+    /**
+     * Get the current location from the location manager, and when we get it
+     * post that information to the Airbop servers
+     * @param context Used to display messages
+     * @param regId Registration ID to unregister
+     * @return success or failure
+     */
+    static boolean unregister(final Context context
+			, final String regId) {
+		Log.i(TAG, "unregistering device (regId = " + regId + ")");
+		displayMessage(context, context.getString(R.string.unregister_device));
+		String serverUrl = SERVER_URL + "unregister";
+		
+		AirBopServerUtilities server_data = new AirBopServerUtilities(regId);
+		try {
+			server_data.post(serverUrl, false, true);
+			// If there is no exception we've unregistered so set the flag
+			// to false.
+			GCMRegistrar.setRegisteredOnServer(context, false);
+			String message = "** " + context.getString(R.string.server_unregistered);
+			displayMessage(context, message);
+		} catch (IOException e) {
+			// At this point the device is unregistered from GCM, but still
+			// registered in the server.
+			// We could try to unregister again, but it is not necessary:
+			// if the server tries to send a message to the device, it will get
+			// a "NotRegistered" error message and should unregister the device.
+			String message = context.getString(R.string.server_unregister_error,
+					e.getMessage());
+			displayMessage(context, message);
+			return false;
+		}
+		return true;
+	}
+    
     
 }

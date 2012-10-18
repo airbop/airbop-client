@@ -41,11 +41,13 @@ public class AirBopIntentService extends IntentService {
 				
 				if (register_task) {
 					if (!registered) {
-						AirBopServerData server_data = AirBopServerData.fillDefaults(regID);
+						AirBopServerUtilities server_data = AirBopServerUtilities.fillDefaults(regID);
 				        //server_data.loadCurrentLocation(appContext);
 						server_data.loadDataFromPrefs(appContext);
-						
-				        registered = ServerUtilities.register(appContext
+						// Get rid of the location from the prefs so we requery next time
+				        AirBopServerUtilities.clearLocationPrefs(appContext);
+				        
+				        registered = AirBopServerUtilities.register(appContext
 				        		, server_data);
 					    // At this point all attempts to register with the AirBop
 					    // server failed, so we need to unregister the device
@@ -59,7 +61,7 @@ public class AirBopIntentService extends IntentService {
 					}
 				} else {
 					if (registered) {
-						registered = ServerUtilities.unregister(appContext
+						registered = AirBopServerUtilities.unregister(appContext
                         		, regID);
 		                // If this worked unregister from the GCM servers
 		                if (registered) {

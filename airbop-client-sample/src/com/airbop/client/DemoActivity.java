@@ -19,9 +19,6 @@ package com.airbop.client;
 import static com.airbop.client.CommonUtilities.DISPLAY_MESSAGE_ACTION;
 import static com.airbop.client.CommonUtilities.EXTRA_MESSAGE;
 import static com.airbop.client.CommonUtilities.USE_LOCATION;
-
-import java.util.Calendar;
-
 import com.google.android.gcm.GCMRegistrar;
 
 import android.content.BroadcastReceiver;
