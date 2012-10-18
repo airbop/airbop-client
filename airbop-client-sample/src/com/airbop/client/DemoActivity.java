@@ -83,6 +83,7 @@ public class DemoActivity extends AirBopActivity {
             case R.id.options_exit:
                 finish();
                 return true;
+           /*
             case R.id.options_unregister_gcm:
             	GCMRegistrar.unregister(getApplicationContext());
             	GCMRegistrar.setRegisteredOnServer(getApplicationContext(), false);
@@ -90,6 +91,7 @@ public class DemoActivity extends AirBopActivity {
             case R.id.options_unregister_airbop:
             	unRegister(false);
                 return true;  
+            */
             default:
                 return super.onOptionsItemSelected(item);
         }

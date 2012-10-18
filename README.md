@@ -181,7 +181,7 @@ The timestamp of the message. Sent as the number of seconds since the Epoch, Jan
 Your AirBop App Key, which is created automatically by AirBop when you create a new app. It is shown on your app's "Info" and "Edit" tabs.
 
 ###### x-signature
-An SHA256 hash constructed exactly as follows:
+An SHA-256 hash constructed exactly as follows:
 
     "POST" + request_uri + AIRBOP_APP_KEY + timestamp + request.body + AIRBOP_APP_SECRET
 
@@ -195,7 +195,10 @@ When you run the AirBop client application the following information can be sent
 The [ISO 3166-1 alpha-2 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#Officially_assigned_code_elements). This must be exactly two characters or it will be ignored.
 
 ###### label (optional)
-This is a 50 character string that can be used to 'tag' or 'group' devices.
+
+A 50 character string that can be used to 'tag' or 'group' devices. You will be able to target devices based on this value when you send your message from the AirBop servers.
+
+For example if you wanted to label devices registrations from tablets vs. phones you could label the phones: `phone` and the tablets: `tablet`, or `standard` and `HD`. Then you would be able to target each group separately.
 
 ###### lat (optional)
 The latitude value of the device. Stored as a float and accurate to one city block.
@@ -216,12 +219,6 @@ The registration ID received from the GCM servers. Described by in the [GCM Arch
 The two character state or province code from the [USA](http://en.wikipedia.org/wiki/List_of_U.S._state_abbreviations#PUSPS) or [Canada](http://en.wikipedia.org/wiki/Canadian_subnational_postal_abbreviations). This must be exactly two characters or it will be ignored.
 
 If the location data is not passed the server will attempt to fill in the data by performing an IP lookup on the device that posted the data. The location data that the AirBop server get's will be quite accurate (99.5% at a country level and 90% at a state level) so you will only need to provide your own data if you need greater accuracy.
-
-###### label (optional)
-
-A 50 character string that can be used to 'tag' or 'group' devices. You will be able to target devices based on this value when you send your message from the AirBop servers.
-
-For example if you wanted to label devices registrations from tablets vs. phones you could label the phones: `phone` and the tablets: `tablet`, or `standard` and `HD`. Then you would be able to target each group separately.
 
 ###### Unregistering
 
