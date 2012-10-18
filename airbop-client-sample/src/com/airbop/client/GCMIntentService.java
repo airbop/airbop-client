@@ -59,12 +59,11 @@ public class GCMIntentService extends GCMBaseIntentService {
     protected void onRegistered(Context context, String registrationId) {
     	
         Log.i(TAG, "Device registered: regId = " + registrationId);
-        displayMessage(context, getString(R.string.gcm_registered)  + registrationId);
+        displayMessage(context, getString(R.string.gcm_registered));
         //Get our data for the server
         AirBopServerUtilities server_data = AirBopServerUtilities.fillDefaults(registrationId);
         //server_data.loadCurrentLocation(context);
         server_data.loadDataFromPrefs(context);
-        displayMessage(context, "Label: " + server_data.mLabel);
         // Get rid of the location from the prefs so we requery next time
         AirBopServerUtilities.clearLocationPrefs(context);
         AirBopServerUtilities.register(getApplicationContext()
