@@ -222,7 +222,7 @@ If the location data is not passed the server will attempt to fill in the data b
 
 ###### Unregistering
 
-When you are unregistering only the `reg` and `app` parameters are needed.
+When you are unregistering only the `reg` parameter is needed.
 
 ## Ensure a Device is Connected
 
