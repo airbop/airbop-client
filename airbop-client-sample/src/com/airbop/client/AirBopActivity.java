@@ -33,7 +33,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -81,13 +80,13 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
     	
     	if (withLocation) {
     		
-    		Location location = getLastLocation(this);
+    		Location location = CommonUtilities.getLastLocation(this);
     		if (location == null) {
     			// We didn't get the location
     			displayMessage(this, "Going to get current location.");
     			// We have to query the Location Manager for the location
     			// and get the result in onLocationChanged
-    			getCurrentLocation(this
+    			CommonUtilities.getCurrentLocation(this
 	    				, this);
     		} else {    			
     			//mServerData.saveCurrentLocation(getApplicationContext()
@@ -255,76 +254,6 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
 	    		displayMessage(appContext, getString(R.string.unreg_thread_running));
 	    	}
     	}
-    }
-
-    /************************
-     * Language helpers
-     */
-    
-    /**
-     * Simple helper that gets the location criteria that we want. 
-     * @return
-     */
-    public static Criteria getCriteria() {
-    	
-    	Criteria criteria = new Criteria();
-	    criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-	    criteria.setPowerRequirement(Criteria.POWER_LOW);
-	    criteria.setAltitudeRequired(false);
-	    criteria.setBearingRequired(false);
-	    criteria.setSpeedRequired(false);
-	    criteria.setCostAllowed(true);
-	    
-	    return criteria;
-    }
-    
-    /**
-     * Get the last location from the LocationManager, if it's available, if not
-     * return null.
-     * @param appContext
-     * @return
-     */
-    public static Location getLastLocation(final Context appContext) {
-    	Location location = null;
-    	Criteria criteria = getCriteria();
-    	LocationManager locationManager = (LocationManager)appContext.getSystemService(Context.LOCATION_SERVICE);
-	    if (locationManager != null) {
-	    	String provider = locationManager.getBestProvider(criteria, true);
-		    location = locationManager.getLastKnownLocation(provider); 
-		    
-		    if (location != null) {
-		    	displayMessage(appContext, "Got last location latitude: " 
- 		    			+ location.getLatitude()
- 		    			+ " longitude: " + location.getLongitude());
-		    }
-    	}
-	    
-	    return location;
-    }
-    
-    /** 
-     * Get the current location from the location manager, and when we get it
-     * post that information to the Airbop servers
-     * @param appContext
-     * @param regId
-     * @return
-     */
-    public static boolean getCurrentLocation(LocationListener locationListener
-    		, final Context appContext
-    		) {
-    	
-    	Criteria criteria = getCriteria();
-    	LocationManager locationManager = (LocationManager)appContext.getSystemService(Context.LOCATION_SERVICE);
-	    if (locationManager != null) {
-	    	String provider = locationManager.getBestProvider(criteria, true);
-	    	
-    		locationManager.requestLocationUpdates(provider, 2000, 10,
-                    locationListener);    
-    		// We've posted so let the caller know
-    		return true;
-	    }
-	    // We couldn't get the location manager so let the caller know
-	    return false;
     }
     
     @Override
