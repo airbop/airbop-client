@@ -44,9 +44,9 @@ import android.location.LocationManager;
  */
 public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTaskCompleteListener, LocationListener{
 	
-	//14 days in milliseconds
+	//21 days in milliseconds
 	public static final long AIRBOP_DEFAULT_ON_SERVER_LIFESPAN_MS =
-            1000 * 3600 * 24 * 14;
+            1000 * 3600 * 24 * 21;
   
     private AirBopRegisterTask  mRegisterTask = null;
     private AsyncTask<Void, Void, Void> mUnRegisterTask = null;

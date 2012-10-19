@@ -9,6 +9,7 @@ If you haven’t already, you’ll first want to read the article [Getting Start
 
 * Your Project ID (from Google’s API console)
 * Your AirBop App Key
+* Your AirBop App Secret
 
 *Note:* GCM requires Android 2.2 or later. If you’re testing on an Android emulator, it must be set to Google API level 8 and must also have a Google account added to it (Android version 4.0.4 or later doesn’t require an account).
 
@@ -60,7 +61,7 @@ On the Import Projects dialog, browse to the ‘airbop-client’ directory as yo
 
 ###### Step 5
 
-Add your Project ID and AirBop App Key to the CommonUtilities.java file. You will be setting the PRROJECT_ID and AIRBOP_APP_KEY static string values by replacing the dummy value <<REPLACE_ME>> with the correct ID and Key values. These replacements are discussed later in this document.
+Add your Project ID and AirBop App Key to the CommonUtilities.java file. You will be setting the PRROJECT_ID, AIRBOP_APP_KEY, and AIRBOP_APP_SECRET static string values by replacing the dummy value <<REPLACE_ME>> with the correct Id, key, and secret values. These replacements are discussed later in this document.
 
 ###### Done
 
@@ -166,7 +167,7 @@ Replace `<<REPLACE_ME>>` with your AirBop App Secret, for example:
 
 ## Optional Values For Replacement
 
-These values are located in the `CommonUtilities.java` class.
+The optional values, like the required replacements, are located in the `CommonUtilities.java` class.
 
 ###### USE_LOCATION
 

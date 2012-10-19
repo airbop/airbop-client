@@ -495,7 +495,7 @@ public class AirBopException extends Exception {
      * @param isRegister IS this a registration or unregistration?
      * @param asJSON Do we want the post body as JSON or URL encoded
      * @throws IOException
-     * @throws AirBopException 
+     * @throws AirBopException Used to return the HTTP reponse code.
      */
     public void post(String url_endpoint
 			, final boolean isRegister
