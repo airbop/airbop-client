@@ -16,6 +16,7 @@
  */
 package com.airbop.client;
 
+import static com.airbop.client.CommonUtilities.USE_LOCATION;
 import static com.airbop.client.CommonUtilities.displayMessage;
 
 import java.util.Set;
@@ -126,16 +127,18 @@ public final class CommonUtilities {
      * @return
      */
     public static Criteria getCriteria() {
-    	
-    	Criteria criteria = new Criteria();
-	    criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-	    criteria.setPowerRequirement(Criteria.POWER_LOW);
-	    criteria.setAltitudeRequired(false);
-	    criteria.setBearingRequired(false);
-	    criteria.setSpeedRequired(false);
-	    criteria.setCostAllowed(true);
-	    
-	    return criteria;
+    	if (USE_LOCATION) {
+	    	Criteria criteria = new Criteria();
+		    criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+		    criteria.setPowerRequirement(Criteria.POWER_LOW);
+		    criteria.setAltitudeRequired(false);
+		    criteria.setBearingRequired(false);
+		    criteria.setSpeedRequired(false);
+		    criteria.setCostAllowed(true);
+		    
+		    return criteria;
+    	} 
+    	return null;
     }
     
     /**
@@ -146,19 +149,20 @@ public final class CommonUtilities {
      */
     public static Location getLastLocation(final Context appContext) {
     	Location location = null;
-    	Criteria criteria = getCriteria();
-    	LocationManager locationManager = (LocationManager)appContext.getSystemService(Context.LOCATION_SERVICE);
-	    if (locationManager != null) {
-	    	String provider = locationManager.getBestProvider(criteria, true);
-		    location = locationManager.getLastKnownLocation(provider); 
-		    
-		    if (location != null) {
-		    	displayMessage(appContext, "Got last location latitude: " 
- 		    			+ location.getLatitude()
- 		    			+ " longitude: " + location.getLongitude());
-		    }
+    	if (USE_LOCATION) {
+	    	Criteria criteria = getCriteria();
+	    	LocationManager locationManager = (LocationManager)appContext.getSystemService(Context.LOCATION_SERVICE);
+		    if (locationManager != null) {
+		    	String provider = locationManager.getBestProvider(criteria, true);
+			    location = locationManager.getLastKnownLocation(provider); 
+			    
+			    if (location != null) {
+			    	displayMessage(appContext, "Got last location latitude: " 
+	 		    			+ location.getLatitude()
+	 		    			+ " longitude: " + location.getLongitude());
+			    }
+	    	}
     	}
-	    
 	    return location;
     }
     
@@ -172,17 +176,18 @@ public final class CommonUtilities {
     public static boolean getCurrentLocation(LocationListener locationListener
     		, final Context appContext
     		) {
-    	
-    	Criteria criteria = getCriteria();
-    	LocationManager locationManager = (LocationManager)appContext.getSystemService(Context.LOCATION_SERVICE);
-	    if (locationManager != null) {
-	    	String provider = locationManager.getBestProvider(criteria, true);
-	    	
-    		locationManager.requestLocationUpdates(provider, 2000, 10,
-                    locationListener);    
-    		// We've posted so let the caller know
-    		return true;
-	    }
+    	if (USE_LOCATION) {
+	    	Criteria criteria = getCriteria();
+	    	LocationManager locationManager = (LocationManager)appContext.getSystemService(Context.LOCATION_SERVICE);
+		    if (locationManager != null) {
+		    	String provider = locationManager.getBestProvider(criteria, true);
+		    	
+	    		locationManager.requestLocationUpdates(provider, 2000, 10,
+	                    locationListener);    
+	    		// We've posted so let the caller know
+	    		return true;
+		    }
+    	}
 	    // We couldn't get the location manager so let the caller know
 	    return false;
     }

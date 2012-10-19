@@ -37,6 +37,7 @@
     <!-- Un-comment this if you want to be able to get the users location -->
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/> 
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/> 
+	
     <!--
      Creates a custom permission so only this app can receive its messages.
 

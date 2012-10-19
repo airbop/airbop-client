@@ -19,6 +19,7 @@ package com.airbop.client;
 import static com.airbop.client.CommonUtilities.AIRBOP_APP_KEY;
 import static com.airbop.client.CommonUtilities.AIRBOP_APP_SECRET;
 import static com.airbop.client.CommonUtilities.SERVER_URL;
+import static com.airbop.client.CommonUtilities.USE_LOCATION;
 import static com.airbop.client.CommonUtilities.displayMessage;
 
 import java.io.IOException;
@@ -52,6 +53,32 @@ import java.net.URL;
 import com.google.android.gcm.GCMRegistrar;
 
 public class AirBopServerUtilities {
+	
+public class AirBopException extends Exception {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2964933186957972677L;
+	
+	private int mHTTPResponseCoder = 0;
+	
+	public AirBopException(){
+		super();             
+	}
+	public AirBopException(String message) {
+		super(message); 
+	}
+	public AirBopException(String message, int responseCode) {
+		 super(message); 
+		 mHTTPResponseCoder = responseCode;
+	}
+	public AirBopException(String message, Throwable cause) {
+		super(message, cause); 
+	}
+	public int getHTTPResponseCode() {
+		return mHTTPResponseCoder;
+	}
+}
 	
 	private static final String TAG = "AirBopServerUtilities";
 	
@@ -171,31 +198,33 @@ public class AirBopServerUtilities {
 	    		mLabel = prefs.getString(LABEL, null);
 	    		Log.v(TAG, "loadDataFromPrefs label: " + mLabel);
 	    		
-	    		String latitude = prefs.getString(LATITUDE, null);
-	    		String longitude = prefs.getString(LONGITUDE, null);
-	    		
-	    		if ((latitude != null) && (longitude != null)) {
-	    			mLocation = new Location("");
-	    			
-	    			mLocation.setLatitude(Double.valueOf(latitude));
-	    			mLocation.setLongitude(Double.valueOf(longitude));
-	    			
-	    			Geocoder gcd = new Geocoder(context, Locale.getDefault());
-	    			
-					try {
-						List<Address> addresses = gcd.getFromLocation(mLocation.getLatitude()
-								, mLocation.getLongitude()
-								, 1);
-						if (addresses.size() > 0) {
-							Address ad = addresses.get(0);
-							if (ad != null) {
-								mCountry = ad.getCountryCode();
-								mState = stateToStateCode(ad.getAdminArea());
-							}
-						} 
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+	    		if (USE_LOCATION) {
+		    		String latitude = prefs.getString(LATITUDE, null);
+		    		String longitude = prefs.getString(LONGITUDE, null);
+		    		
+		    		if ((latitude != null) && (longitude != null)) {
+		    			mLocation = new Location("");
+		    			
+		    			mLocation.setLatitude(Double.valueOf(latitude));
+		    			mLocation.setLongitude(Double.valueOf(longitude));
+		    			
+		    			Geocoder gcd = new Geocoder(context, Locale.getDefault());
+		    			
+						try {
+							List<Address> addresses = gcd.getFromLocation(mLocation.getLatitude()
+									, mLocation.getLongitude()
+									, 1);
+							if (addresses.size() > 0) {
+								Address ad = addresses.get(0);
+								if (ad != null) {
+									mCountry = ad.getCountryCode();
+									mState = stateToStateCode(ad.getAdminArea());
+								}
+							} 
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+		    		}
 	    		}
 	    	}
 		}
@@ -213,10 +242,13 @@ public class AirBopServerUtilities {
 			final SharedPreferences prefs = getPreferences(context);
 	    	if(prefs != null) {
 	    		Editor editor = prefs.edit();
+	    		if (USE_LOCATION) {
+	    			
+	    			editor.putString(LATITUDE, Double.toString(mLocation.getLatitude()));
+	    			editor.putString(LONGITUDE, Double.toString(mLocation.getLongitude()));
+	    		}
 	    		
-	            editor.putString(LATITUDE, Double.toString(mLocation.getLatitude()));
-	            editor.putString(LONGITUDE, Double.toString(mLocation.getLongitude()));
-	            editor.putString(LABEL, mLabel);
+	    		editor.putString(LABEL, mLabel);
 	            
 	            editor.commit();
 	    	}
@@ -463,11 +495,12 @@ public class AirBopServerUtilities {
      * @param isRegister IS this a registration or unregistration?
      * @param asJSON Do we want the post body as JSON or URL encoded
      * @throws IOException
+     * @throws AirBopException 
      */
     public void post(String url_endpoint
 			, final boolean isRegister
 			, final boolean asJSON)
-            throws IOException {
+            throws IOException, AirBopException {
         URL url;
         try {
             url = new URL(url_endpoint);
@@ -490,10 +523,10 @@ public class AirBopServerUtilities {
 			e.printStackTrace();
 		}
 		
-		Log.v(TAG, "signature: '" + signature);
-		Log.v(TAG, "signature_hash: '" + signature_hash);
-        
+		//Log.v(TAG, "signature: '" + signature);
+		//Log.v(TAG, "signature_hash: '" + signature_hash);
         Log.v(TAG, "Posting '" + body + "' to " + url);
+        
         byte[] bytes = body.getBytes();
         
         HttpURLConnection conn = null;
@@ -516,6 +549,7 @@ public class AirBopServerUtilities {
             conn.addRequestProperty(HEADER_APP, AIRBOP_APP_KEY);
             conn.addRequestProperty(HEADER_SIGNATURE, signature_hash);
             
+            Log.i(TAG, "About to post");
            
             // post the request
             OutputStream out = conn.getOutputStream();
@@ -527,9 +561,9 @@ public class AirBopServerUtilities {
             	&& (status != 201)
             	&& (status != 202)){
             	if ((status >=500) && (status <= 599)) { //500 codes
-            		throw new IOException(Integer.toString(status));
+            		throw new AirBopException("Error response code returned by the AirBop servers.", status);
             	} else if ((status >=400) && (status <= 499)) { //400 codes
-            		throw new IOException(Integer.toString(status));
+            		throw new AirBopException("Error response code returned by the AirBop servers.", status);
             	}
             }
         } finally {
@@ -578,17 +612,13 @@ public class AirBopServerUtilities {
 		        displayMessage(context, "Registration expires on: "+ new Timestamp(expirationTime));
 		        return true;
 		        
-		    } catch (IOException e) {
-		        /*if (e.getMessage().equals("409")) {
-		        	displayMessage(context
-		        			, context.getString(R.string.already_registered));
-		        	return true;
-		        } */
-		    	String error_msg = e.getMessage();
-		    	int error_code = 0;
-		    	if (error_msg != null) {
-		    		error_code = Integer.valueOf(error_msg);
-		    	}
+		    }  
+		    catch (AirBopException airbop_e) {
+		        
+		    	String error_msg = airbop_e.getMessage();
+		    	Log.i(TAG, "Error message:  " + error_msg);
+		    	int error_code = airbop_e.getHTTPResponseCode();
+		    	
 		    	            	
 		    	if ((error_code >= 400) && (error_code <= 499)) {
 		        	displayMessage(context
@@ -597,12 +627,12 @@ public class AirBopServerUtilities {
 		        } else {
 		        	
 		        	displayMessage(context
-		        			, context.getString(R.string.airbop_server_reg_failed, e));
+		        			, context.getString(R.string.airbop_server_reg_failed, airbop_e));
 		        	
 		        	// Here we are simplifying and retrying on any error; in a real
 		            // application, it should retry only on unrecoverable errors
 		            // (like HTTP error code 503).
-		            Log.e(TAG, "Failed to register on attempt " + i, e);
+		            Log.e(TAG, "Failed to register on attempt " + i, airbop_e);
 		            if (i == MAX_ATTEMPTS) {
 		                break;
 		            }
@@ -618,6 +648,12 @@ public class AirBopServerUtilities {
 		            // increase backoff exponentially
 		            backoff *= 2;
 		        }
+		    }
+		    catch (IOException e) {
+		    	// Probably caused by a 401 error code
+	            Log.e(TAG, "Failed to register on attempt " + i, e);
+	            displayMessage(context, context.getString(R.string.airbop_server_reg_failed_401, e.getMessage()));
+	            return false;
 		    }
 		}
 		String message = context.getString(R.string.server_register_error,
@@ -641,7 +677,9 @@ public class AirBopServerUtilities {
 		
 		AirBopServerUtilities server_data = new AirBopServerUtilities(regId);
 		try {
+			
 			server_data.post(serverUrl, false, true);
+			
 			// If there is no exception we've unregistered so set the flag
 			// to false.
 			GCMRegistrar.setRegisteredOnServer(context, false);
@@ -653,10 +691,16 @@ public class AirBopServerUtilities {
 			// We could try to unregister again, but it is not necessary:
 			// if the server tries to send a message to the device, it will get
 			// a "NotRegistered" error message and should unregister the device.
+			Log.e(TAG, "Failed to unregister on attempt " + e);
 			String message = context.getString(R.string.server_unregister_error,
 					e.getMessage());
 			displayMessage(context, message);
 			return false;
+		}catch (AirBopException e) {
+			Log.e(TAG, "Failed to unregister on attempt " + e);
+			String message = context.getString(R.string.server_unregister_error,
+					e.getMessage());
+			displayMessage(context, message);
 		}
 		return true;
 	}
