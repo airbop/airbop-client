@@ -276,8 +276,9 @@ While logged into your AirBop account, perform the following steps starting from
 4.	You should now see the various options available in a Message Details area. Enter a title for your message.
 5.	Select “Text” as the mode for this example.
 6.	Enter the message body you want shown in the notification message.
-7.	For this example, you can leave the rest of the settings as their default values.
-8.	When you’re ready to send the message, click the “Send Message” button and agree to the confirmation.
+7.  Enter the Target URL that you want the user to jump to when they click on the notification.
+8.	For this example, you can leave the rest of the settings as their default values.
+9.	When you’re ready to send the message, click the “Send Message” button and agree to the confirmation.
 
 ## Go Read your Notification Message
 
