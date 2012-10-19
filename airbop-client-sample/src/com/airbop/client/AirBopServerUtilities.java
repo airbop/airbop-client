@@ -52,33 +52,46 @@ import java.net.URL;
 
 import com.google.android.gcm.GCMRegistrar;
 
+/**
+ * A simple helper data class used to store data, register and 
+ * unregister with the AirBop servers. 
+ * 
+ * This class contains all the necessary code to register and
+ * unregister with the AirBop servers. It also shows how to format
+ * the headers and body elements when posting to AirBop.
+ * 
+ * You are free to use it within your app, or translate the code
+ * as necessary to fit your needs.
+ */
 public class AirBopServerUtilities {
 	
-public class AirBopException extends Exception {
 	/**
-	 * 
+	 * Simple  Exception class to store HTTP response codes returned by
+	 * the AirBop serves in case of an error.
 	 */
-	private static final long serialVersionUID = 2964933186957972677L;
+	public class AirBopException extends Exception {
 	
-	private int mHTTPResponseCoder = 0;
-	
-	public AirBopException(){
-		super();             
+		private static final long serialVersionUID = 2964933186957972677L;
+		
+		private int mHTTPResponseCoder = 0;
+		
+		public AirBopException(){
+			super();             
+		}
+		public AirBopException(String message) {
+			super(message); 
+		}
+		public AirBopException(String message, int responseCode) {
+			 super(message); 
+			 mHTTPResponseCoder = responseCode;
+		}
+		public AirBopException(String message, Throwable cause) {
+			super(message, cause); 
+		}
+		public int getHTTPResponseCode() {
+			return mHTTPResponseCoder;
+		}
 	}
-	public AirBopException(String message) {
-		super(message); 
-	}
-	public AirBopException(String message, int responseCode) {
-		 super(message); 
-		 mHTTPResponseCoder = responseCode;
-	}
-	public AirBopException(String message, Throwable cause) {
-		super(message, cause); 
-	}
-	public int getHTTPResponseCode() {
-		return mHTTPResponseCoder;
-	}
-}
 	
 	private static final String TAG = "AirBopServerUtilities";
 	
