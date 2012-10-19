@@ -242,6 +242,18 @@ If the location data is not passed the server will attempt to fill in the data b
 
 When you are unregistering only the `reg` parameter is needed.
 
+###### Re-Registering Or Updating With the AirBop Servers
+
+After you have registered with the AirBop servers you can update your device's information by registering with the AirBop servers again. If you use the same registration Id (provided by GCM) AirBop will update the device’s information with the newly posted values. 
+
+For example if the device has it’s default language set to English the first time it registers, and French the second time it registers. The language for the device will be stored as French after the second registration.
+
+By default the sample client will attempt to re-register with the AirBop servers every 21 days. This is the recommended time span and is controlled by the `AIRBOP_DEFAULT_ON_SERVER_LIFESPAN_MS` value in the `AirBopActivity` class. The 21 day lifespan is passed to the GCM library using the following code:
+
+    GCMRegistrar.setRegisterOnServerLifespan(this, AIRBOP_DEFAULT_ON_SERVER_LIFESPAN_MS);
+    
+This setting controls when the value returned by: [`GCMRegistrar.isRegisteredOnServer()`] `(http://developer.android.com/guide/google/gcm/client-javadoc/com/google/android/gcm/GCMRegistrar.html#isRegisteredOnServer%28Context%29) expires and will be set back to false, causing the client to re-register with AirBop.
+
 ## Ensure a Device is Connected
 
 Before you build and run the app, you must ensure you have either a physical device, or an Android Virtual Device running and connected. For more information on how to run an Android emulator, see [Managing Virtual Devices](http://developer.android.com/tools/devices/index.html) in the Android developer documentation.
