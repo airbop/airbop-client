@@ -701,6 +701,7 @@ public class AirBopException extends Exception {
 			String message = context.getString(R.string.server_unregister_error,
 					e.getMessage());
 			displayMessage(context, message);
+			return false;
 		}
 		return true;
 	}

@@ -164,6 +164,23 @@ Replace `<<REPLACE_ME>>` with your AirBop App Secret, for example:
 
     static final String AIRBOP_APP_SECRET = "3c4643055d38b7da8c175afe6288bThisIsNotARealSecret";
 
+## Optional Values For Replacement
+
+These values are located in the `CommonUtilities.java` class.
+
+###### USE_LOCATION
+
+Whether or not the client will collect location information and then pass that information on to the server. If this value is set to false, you not need the location permissions in the manifest:
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/> 
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/> 
+	
+###### USE_SERVICE
+
+Controls whether or not the client will use `AirBopIntentService.java` or `AirBopRegisterTask.java` when registering with the AirBop servers. If `USE_SERVICE` is `true` then the `AirBopIntentService.java` [IntentService]( http://developer.android.com/reference/android/app/IntentService.html) will be used, and if `USE_SERVICE` is `true` then the `AirBopIntentService.java` [AsyncTask]( http://developer.android.com/reference/android/os/AsyncTask.html) will be used.
+
+This gives you the option to test both approaches easily. The approach you will use in your final app depends on your specific requirements.
+
 ## Required Headers
 
 When registering or unregistering with the AirBop servers the following headers are required:
