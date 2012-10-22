@@ -226,7 +226,7 @@ The longitude value of the device. Stored as a float and accurate to one city bl
 
 ###### lang (optional)
 The [ISO639-1 language code](http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes). Use:
-    Locale.getDefault().toString();
+    Locale.getDefault().getLanguage();
 Only the first two characters of the locale will be stored.
  
 ###### reg
