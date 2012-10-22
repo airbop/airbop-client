@@ -120,7 +120,7 @@ public class AirBopServerUtilities {
 	//Defines
 	private  static final int MAX_ATTEMPTS = 5;
 	private  static final int BACKOFF_MILLI_SECONDS = 2000;
-	private  static final int AIRBOP_TIMOUT_MILLI_SECONDS = 1000 * 30;
+	private  static final int AIRBOP_TIMOUT_MILLI_SECONDS = 1000 * 60;
     private static final String PREFERENCES = "com.airbop.client.data";
     public static final String OUTPUT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss z";
     
@@ -648,7 +648,7 @@ public class AirBopServerUtilities {
 		        } else {
 		        	
 		        	displayMessage(context
-		        			, context.getString(R.string.airbop_server_reg_failed, airbop_e));
+		        			, context.getString(R.string.airbop_server_reg_failed, error_code, error_msg));
 		        	
 		        	// Here we are simplifying and retrying on any error; in a real
 		            // application, it should retry only on unrecoverable errors
@@ -673,7 +673,24 @@ public class AirBopServerUtilities {
 		    catch (SocketTimeoutException e) {
 		    	 Log.e(TAG, "Failed to register on attempt (timeout)" + i, e);
 		            displayMessage(context, context.getString(R.string.airbop_server_reg_failed_timeout, e.getMessage()));
-		            return false;
+		         // Here we are simplifying and retrying on any error; in a real
+		            // application, it should retry only on unrecoverable errors
+		            // (like HTTP error code 503).
+		            Log.e(TAG, "Failed to register on attempt " + i, e);
+		            if (i == MAX_ATTEMPTS) {
+		                break;
+		            }
+		            try {
+		                Log.d(TAG, "Sleeping for " + backoff + " ms before retry");
+		                Thread.sleep(backoff);
+		            } catch (InterruptedException e1) {
+		                // Activity finished before we complete - exit.
+		                Log.d(TAG, "Thread interrupted: abort remaining retries!");
+		                Thread.currentThread().interrupt();
+		                return false;
+		            }
+		            // increase the backoff exponentially
+		            backoff *= 2;
 		    }
 		    catch (IOException e) {
 		    	// Probably caused by a 401 error code
