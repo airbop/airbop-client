@@ -180,7 +180,7 @@ Whether or not the client will collect location information and then pass that i
 
 Controls whether or not the client will use `AirBopIntentService.java` or `AirBopRegisterTask.java` when registering with the AirBop servers. If `USE_SERVICE` is `true` then the `AirBopIntentService.java` [IntentService]( http://developer.android.com/reference/android/app/IntentService.html) will be used, and if `USE_SERVICE` is `true` then the `AirBopIntentService.java` [AsyncTask]( http://developer.android.com/reference/android/os/AsyncTask.html) will be used.
 
-This gives you the option to test both approaches easily. The approach you will use in your final app depends on your specific requirements.
+This gives you the option to test both approaches easily. The approach you will use in your final app depends on your specific requirements. You generally won't want to switch between the two methods in your app but changing this value will allow you test the two different sample implementations easily.
 
 ## Required Headers
 

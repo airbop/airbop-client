@@ -89,8 +89,7 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
     			CommonUtilities.getCurrentLocation(this
 	    				, this);
     		} else {    			
-    			//mServerData.saveCurrentLocation(getApplicationContext()
-    			//		, location);
+    			//Save the data to the prefs
     			mServerData.mLocation = location;
     			mServerData.saveCurrentDataToPrefs(getApplicationContext());
     			//register
@@ -189,70 +188,81 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
         }
     }
     
-    protected void unRegister(final boolean bUnregisterFromGCM) {
+    public void unRegister() {
+    	
+    	if (USE_SERVICE) {
+    		//Use the Service
+    		internalUnRegisterService();
+    	} else {
+    		//use the ASYNC TASK
+    		internalUnRegisterAsyncTask();
+    	}
+    }
+    
+    private void internalUnRegisterService() {
+    	
+		//Use the Service
+    	if (mServiceRunning == false) {	
+    		final String regId = GCMRegistrar.getRegistrationId(this);
+	    	// Only bother if we actually have a regID from GCM, otherwise
+	    	// there is nothing to unregister
+	        if (!regId.equals("")) {
+	    		if (mRegisterReceiver == null) {
+	    	 		// Register receiver
+					registerAirBopRegisterReceiver();
+	    	 	}
+	    	 		    	 	
+		 		Intent intent = new Intent(this, AirBopIntentService.class);
+				intent.putExtra(AirBopIntentService.BUNDLE_REG_ID, regId);
+				intent.putExtra(AirBopIntentService.BUNDLE_REGISTRATION_TASK, false);
+									
+				mServiceRunning = true;
+				
+				// Start Service		
+				startService(intent);
+	        }
+    	} else {
+    		displayMessage(this, getString(R.string.unreg_thread_running));
+    	}
+    }
+    
+    private void internalUnRegisterAsyncTask() {
     	// Try to unregister, but not in the UI thread.
         // It's also necessary to cancel the thread onDestroy(),
         // hence the use of AsyncTask instead of a raw thread.
     	final Context appContext = getApplicationContext();
-    	if (USE_SERVICE) {
-    		//Use the Service
-	    	if (mServiceRunning == false) {	
-	    		final String regId = GCMRegistrar.getRegistrationId(this);
-		    	// Only bother if we actually have a regID from GCM, otherwise
-		    	// there is nothing to unregister
-		        if (!regId.equals("")) {
-		    		if (mRegisterReceiver == null) {
-		    	 		// Register receiver
-						registerAirBopRegisterReceiver();
-		    	 	}
-		    	 	
-		    	 	
-			 		Intent intent = new Intent(this, AirBopIntentService.class);
-					intent.putExtra(AirBopIntentService.BUNDLE_REG_ID, regId);
-					intent.putExtra(AirBopIntentService.BUNDLE_REGISTRATION_TASK, false);
-										
-					mServiceRunning = true;
-					
-					// Start Service		
-					startService(intent);
-		        }
-	    	} else {
-	    		displayMessage(appContext, getString(R.string.unreg_thread_running));
-	    	}
-    	} else {
-    		//use the ASYNC TASK
     	
-	    		if (mUnRegisterTask == null) {
-		    	final String regId = GCMRegistrar.getRegistrationId(this);
-		    	// Only bother if we actually have a regID from GCM, otherwise
-		    	// there is nothing to unregister
-		        if (!regId.equals("")) {
-			    	//final Context context = this;
-			        mUnRegisterTask = new AsyncTask<Void, Void, Void>() {
-			
-			            @Override
-			            protected Void doInBackground(Void... params) {
-			            	
-			                boolean unregistered = AirBopServerUtilities.unregister(appContext
-			                        		, regId);
-			                // If this worked unregister from the GCM servers
-			                if ((unregistered) && (bUnregisterFromGCM)) {
-			                    GCMRegistrar.unregister(appContext);
-			                }
-			                return null;
-			            }
-			
-			            @Override
-			            protected void onPostExecute(Void result) {
-			            	mUnRegisterTask = null;
-			            }
-			
-			        };
-			        mUnRegisterTask.execute(null, null, null);
-		        }
-	    	} else {
-	    		displayMessage(appContext, getString(R.string.unreg_thread_running));
-	    	}
+		//use the ASYNC TASK
+    	if (mUnRegisterTask == null) {
+	    	final String regId = GCMRegistrar.getRegistrationId(this);
+	    	// Only bother if we actually have a regID from GCM, otherwise
+	    	// there is nothing to unregister
+	        if (!regId.equals("")) {
+		    	//final Context context = this;
+		        mUnRegisterTask = new AsyncTask<Void, Void, Void>() {
+		
+		            @Override
+		            protected Void doInBackground(Void... params) {
+		            	
+		                boolean unregistered = AirBopServerUtilities.unregister(appContext
+		                        		, regId);
+		                // If this worked unregister from the GCM servers
+		                if (unregistered) {
+		                    GCMRegistrar.unregister(appContext);
+		                }
+		                return null;
+		            }
+		
+		            @Override
+		            protected void onPostExecute(Void result) {
+		            	mUnRegisterTask = null;
+		            }
+		
+		        };
+		        mUnRegisterTask.execute(null, null, null);
+	        }
+    	} else {
+    		displayMessage(appContext, getString(R.string.unreg_thread_running));
     	}
     }
     
@@ -282,7 +292,8 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
 	}
 	
 	private void unregisterFromLocationManager() {
-		LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+		LocationManager locationManager = (LocationManager)getSystemService(
+				Context.LOCATION_SERVICE);
 	    if (locationManager != null) {
 	    	locationManager.removeUpdates(this);
 	    }
@@ -296,9 +307,8 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
     			+ location.getLatitude()
     			+ " longitude: " + location.getLongitude());
 			
-		//Set the location
-		//mServerData.saveCurrentLocation(getApplicationContext()
-		//		, location);
+		// Set the location and save the data so that the intent services can read
+		// it
 		mServerData.mLocation = location;
 		mServerData.saveCurrentDataToPrefs(getApplicationContext());
 		//register
@@ -333,7 +343,7 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
 
 	protected void unregisterAirBopRegisterReceiver() {
 		if (mRegisterReceiver != null) {
-			//Log.v(TAG, "unregisterRSSReceiver");
+			
 			unregisterReceiver(mRegisterReceiver);
 			mRegisterReceiver = null;
 		}

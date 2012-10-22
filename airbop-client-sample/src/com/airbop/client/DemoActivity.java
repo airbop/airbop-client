@@ -50,14 +50,9 @@ public class DemoActivity extends AirBopActivity {
         mDisplay = (TextView) findViewById(R.id.display);
         registerReceiver(mHandleMessageReceiver,
                 new IntentFilter(DISPLAY_MESSAGE_ACTION));
-        
-        
-        
-
-        
+       
         // Call the register function in the AirBopActivity 
-        register(USE_LOCATION);
-        
+        register(USE_LOCATION);  
     }
 
     @Override
@@ -75,7 +70,7 @@ public class DemoActivity extends AirBopActivity {
             	register(USE_LOCATION);
                 return true;
             case R.id.options_unregister:
-            	unRegister(true);
+            	unRegister();
                 return true;
             case R.id.options_clear:
                 mDisplay.setText(null);

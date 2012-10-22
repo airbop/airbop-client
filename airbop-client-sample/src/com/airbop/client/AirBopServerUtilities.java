@@ -103,25 +103,26 @@ public class AirBopServerUtilities {
 	public String mLabel = null;
 	public String mRegId = null;
 	//Post Param keys
-	static final String COUNTRY = "country";
-	static final String LABEL = "label";
-	static final String LANGUAGE = "lang";
-	static final String LATITUDE = "lat";
-	static final String LONGITUDE = "long";
-	static final String REGISTRATION_ID = "reg";
-	static final String STATE = "state";
+	public static final String COUNTRY = "country";
+	public static final String LABEL = "label";
+	public static final String LANGUAGE = "lang";
+	public static final String LATITUDE = "lat";
+	public static final String LONGITUDE = "long";
+	public static final String REGISTRATION_ID = "reg";
+	public static final String STATE = "state";
 	
 	//Header keys
-	static final String HEADER_APP = "x-app-key";
-	static final String HEADER_TIMESTAMP = "x-timestamp";
-	static final String HEADER_SIGNATURE = "x-signature";
+	public static final String HEADER_APP = "x-app-key";
+	public static final String HEADER_TIMESTAMP = "x-timestamp";
+	public static final String HEADER_SIGNATURE = "x-signature";
 	
-	
-	private static final int MAX_ATTEMPTS = 5;
-    private static final int BACKOFF_MILLI_SECONDS = 2000;
-    private static final Random random = new Random();
+	//Defines
+	private  static final int MAX_ATTEMPTS = 5;
+	private  static final int BACKOFF_MILLI_SECONDS = 2000;
     private static final String PREFERENCES = "com.airbop.client.data";
     public static final String OUTPUT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss z";
+    
+    private static final Random random = new Random();
     
 	public AirBopServerUtilities() {
 		
@@ -251,7 +252,7 @@ public class AirBopServerUtilities {
 	 */
 	public void saveCurrentDataToPrefs(Context context) {
 		if (context != null) {
-			//writeLocationToPrefs(context, location);
+			
 			final SharedPreferences prefs = getPreferences(context);
 	    	if(prefs != null) {
 	    		Editor editor = prefs.edit();
@@ -261,8 +262,7 @@ public class AirBopServerUtilities {
 	    			editor.putString(LONGITUDE, Double.toString(mLocation.getLongitude()));
 	    		}
 	    		
-	    		editor.putString(LABEL, mLabel);
-	            
+	    		editor.putString(LABEL, mLabel); 
 	            editor.commit();
 	    	}
 		}
@@ -388,7 +388,11 @@ public class AirBopServerUtilities {
     		, final String url
     		, final String timestamp
     		, final String body) {
-//    	/signature_string = request_uri + APP_KEY + timestamp + request.body + SECRET
+    	/**
+    	 * The signature is constructed using the following value:
+    	 * "POST" + request_uri + AIRBOP_APP_KEY + timestamp + request.body + AIRBOP_APP_SECRET
+    	 */
+
     	StringBuilder uriBuilder = new StringBuilder();
     	// METHOD
     	uriBuilder.append(method);
@@ -536,9 +540,7 @@ public class AirBopServerUtilities {
 			e.printStackTrace();
 		}
 		
-		//Log.v(TAG, "signature: '" + signature);
-		//Log.v(TAG, "signature_hash: '" + signature_hash);
-        Log.v(TAG, "Posting '" + body + "' to " + url);
+		Log.v(TAG, "Posting '" + body + "' to " + url);
         
         byte[] bytes = body.getBytes();
         
@@ -658,7 +660,7 @@ public class AirBopServerUtilities {
 		                Thread.currentThread().interrupt();
 		                return false;
 		            }
-		            // increase backoff exponentially
+		            // increase the backoff exponentially
 		            backoff *= 2;
 		        }
 		    }
