@@ -254,30 +254,29 @@ By default the sample client will attempt to re-register with the AirBop servers
     
 This setting controls when the value returned by: `[GCMRegistrar.isRegisteredOnServer()] `(http://developer.android.com/guide/google/gcm/client-javadoc/com/google/android/gcm/GCMRegistrar.html#isRegisteredOnServer%28Context%29)` expires and will be set back to false, causing the client to re-register with AirBop.
 
-## AirBop Response Codes
+### AirBop Response Codes
 
-The following HTTP response code can be returned by the AirBop servers. In general any 400 errors except for 403 mean that you have an error in your code you should fix it before attempting to register again.
+The following HTTP response code can be returned by the AirBop servers. In general any 400 errors, except for 403, mean that you have an error in your code you should fix it before attempting to register again.
 
 ###### 200 OK
-* Everything is fine. The device was accepted and/or updated
+* Everything is fine. The device was accepted and/or updated, check your dashboard for verification.
 
 ###### 400 Bad Request
-* Bad request: missing headers
-* Bad Request: Missing param(s)
-
+* Bad request: missing headers.
+* Bad Request: Missing parameter(s).
 
 ###### 401 Unauthorized
-* authentication failed
-* signature is invalid
-* request is outside the required time window of 4 minutes
+* Authentication failed.
+* Signature is invalid.
+* Request is outside the required time window of 4 minutes.
 
 ###### 403 Forbidden
-* Forbidden: Plan device limit reached
-* This is the only 4xx error that should ever be retried - but not too soon (maybe next app launch). Once a developer upgrades their plan, it will go away.
+* Forbidden: Plan device limit reached.
+* This is the only 4xx error that should ever be retried without altering the client code (maybe next app launch). Once you upgrade your plan, it will go away.
 
 ###### 422 Unprocessable Entity
-* This means you send some bad data to our server, that doesn't fit our specs
-* If your JSON was invalid, you'll get back {"error":"Invalid JSON"}
+* This means you send some bad data to our server, that doesn't fit our specs.
+* If your JSON was invalid, you'll get back {"error":"Invalid JSON"}.
 
 ###### 5xx
 * A transient server error. Try again later.

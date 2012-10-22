@@ -582,9 +582,9 @@ public class AirBopServerUtilities {
             	&& (status != 201)
             	&& (status != 202)){
             	if ((status >=500) && (status <= 599)) { //500 codes
-            		throw new AirBopException("Error response code returned by the AirBop servers.", status);
+            		throw new AirBopException(conn.getResponseMessage(), status);
             	} else if ((status >=400) && (status <= 499)) { //400 codes
-            		throw new AirBopException("Error response code returned by the AirBop servers.", status);
+            		throw new AirBopException(conn.getResponseMessage(), status);
             	}
             }
         } finally {
@@ -643,7 +643,7 @@ public class AirBopServerUtilities {
 		    	            	
 		    	if ((error_code >= 400) && (error_code <= 499)) {
 		        	displayMessage(context
-		        			, context.getString(R.string.request_error, error_code));
+		        			, context.getString(R.string.request_error, error_code, error_msg));
 		        	return false;
 		        } else {
 		        	
