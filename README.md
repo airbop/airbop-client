@@ -254,7 +254,7 @@ By default the sample client will attempt to re-register with the AirBop servers
     
 This setting controls when the value returned by: `[GCMRegistrar.isRegisteredOnServer()] `(http://developer.android.com/guide/google/gcm/client-javadoc/com/google/android/gcm/GCMRegistrar.html#isRegisteredOnServer%28Context%29)` expires and will be set back to false, causing the client to re-register with AirBop.
 
-###### AirBop Response Codes
+## AirBop Response Codes
 
 The following HTTP response code can be returned by the AirBop servers. In general any 400 errors except for 403 mean that you have an error in your code you should fix it before attempting to register again.
 
