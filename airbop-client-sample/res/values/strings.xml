@@ -39,6 +39,7 @@
     <string name="unregister_device">Attempting to unregister device from AirBop server</string>
     <string name="airbop_server_reg_failed">Failed to register: Post failed with error code: %1$s</string>
 	<string name="airbop_server_reg_failed_401">Failed to register, most likely a 401 error, server error message: %1$s</string>
+	<string name="airbop_server_reg_failed_timeout">Failed to register, connection timeout, server error message: %1$s</string>
 	<string name="already_registered">Device is already registered on AirBop server.</string>
 	<string name="options_unregister_gcm">Unregister GCM</string>
 	<string name="options_unregister_airbop">Unregister AirBop</string>

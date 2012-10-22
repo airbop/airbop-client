@@ -48,6 +48,7 @@ import android.util.Pair;
 
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 
 import com.google.android.gcm.GCMRegistrar;
@@ -119,8 +120,11 @@ public class AirBopServerUtilities {
 	//Defines
 	private  static final int MAX_ATTEMPTS = 5;
 	private  static final int BACKOFF_MILLI_SECONDS = 2000;
+	private  static final int AIRBOP_TIMOUT_MILLI_SECONDS = 1000 * 30;
     private static final String PREFERENCES = "com.airbop.client.data";
     public static final String OUTPUT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss z";
+    
+    
     
     private static final Random random = new Random();
     
@@ -143,7 +147,7 @@ public class AirBopServerUtilities {
 		if (server_data != null) {
 			Locale default_locale = Locale.getDefault();
 			if (default_locale != null) {
-				server_data.mLanguage = default_locale.toString();
+				server_data.mLanguage = default_locale.getLanguage();
 			}	
 		}
 		return server_data;
@@ -549,6 +553,8 @@ public class AirBopServerUtilities {
             conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(true);
             conn.setUseCaches(false);
+            conn.setConnectTimeout(AIRBOP_TIMOUT_MILLI_SECONDS);
+            conn.setReadTimeout (AIRBOP_TIMOUT_MILLI_SECONDS);
             conn.setFixedLengthStreamingMode(bytes.length);
             conn.setRequestMethod("POST");
             
@@ -664,12 +670,18 @@ public class AirBopServerUtilities {
 		            backoff *= 2;
 		        }
 		    }
+		    catch (SocketTimeoutException e) {
+		    	 Log.e(TAG, "Failed to register on attempt (timeout)" + i, e);
+		            displayMessage(context, context.getString(R.string.airbop_server_reg_failed_timeout, e.getMessage()));
+		            return false;
+		    }
 		    catch (IOException e) {
 		    	// Probably caused by a 401 error code
 	            Log.e(TAG, "Failed to register on attempt " + i, e);
 	            displayMessage(context, context.getString(R.string.airbop_server_reg_failed_401, e.getMessage()));
 	            return false;
 		    }
+		    
 		}
 		String message = context.getString(R.string.server_register_error,
 		        MAX_ATTEMPTS);

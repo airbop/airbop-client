@@ -69,7 +69,7 @@ public final class CommonUtilities {
     /**
      * Tag used on log messages.
      */
-    static final String TAG = "GCMDemo";
+    static final String TAG = "AirBop-Client Demo";
 
     /**
      * Intent used to display a message in the screen.
