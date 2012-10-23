@@ -83,7 +83,7 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
     		Location location = CommonUtilities.getLastLocation(this);
     		if (location == null) {
     			// We didn't get the location
-    			displayMessage(this, "Going to get current location.");
+    			displayMessage(this, getString(R.string.getting_location));
     			// We have to query the Location Manager for the location
     			// and get the result in onLocationChanged
     			CommonUtilities.getCurrentLocation(this
@@ -113,7 +113,7 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
         	// The response from the GCM server will trigger: 
         	// GCMIntentService.onRegistered() where we will then register with
         	// AiRBop's servers.
-    		displayMessage(appContext, "Asking GCM for th reg ID");
+    		displayMessage(appContext, getString(R.string.gcm_register_attempt));
         	GCMRegistrar.register(appContext, PROJECT_ID);
         } else {
         	
@@ -303,9 +303,10 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
 		
 		// Unregister from location manager
 		unregisterFromLocationManager();
-		displayMessage(this, "Activity onLocationChanged latitude: " 
-    			+ location.getLatitude()
-    			+ " longitude: " + location.getLongitude());
+		
+		displayMessage(this, getString(R.string.got_current_location
+				, location.getLatitude()
+				, location.getLongitude()));
 			
 		// Set the location and save the data so that the intent services can read
 		// it
@@ -354,16 +355,16 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			displayMessage(context, "AirBopRegisterReceiver onReceive");
+			
 			mServiceRunning = false;
+			
 			boolean registration_task = intent.getBooleanExtra(AirBopIntentService.BUNDLE_REGISTRATION_TASK, true);
 			if (registration_task) {
-				displayMessage(context, "AirBopRegisterReceiver registration complete");
+				displayMessage(context, getString(R.string.airbop_service_registration_complete));
 			} else {
-				displayMessage(context, "AirBopRegisterReceiver unregistration complete");
+				displayMessage(context, getString(R.string.airbop_service_unregistration_complete));
 			}
-			displayMessage(context, "AirBopRegisterReceiver result: "
-					+ intent.getBooleanExtra(AirBopIntentService.BUNDLE_AIRBOP_SUCCESS, false));
+			
 		}
 	}
 }

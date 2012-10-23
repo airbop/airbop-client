@@ -727,8 +727,7 @@ public class AirBopServerUtilities {
 			// If there is no exception we've unregistered so set the flag
 			// to false.
 			GCMRegistrar.setRegisteredOnServer(context, false);
-			String message = "** " + context.getString(R.string.server_unregistered);
-			displayMessage(context, message);
+			displayMessage(context, context.getString(R.string.server_unregistered));
 		} catch (IOException e) {
 			// At this point the device is unregistered from GCM, but still
 			// registered in the server.

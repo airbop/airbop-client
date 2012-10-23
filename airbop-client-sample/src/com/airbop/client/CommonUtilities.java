@@ -55,7 +55,7 @@ public final class CommonUtilities {
      * AIRBOP_APP_SECRET App key to identify this app shhhh
      */
     static final String AIRBOP_APP_SECRET = <<REPLACE_ME>>;
-    
+       
     /**
      * Should we send the location to the AirBopServer
      */
@@ -157,9 +157,10 @@ public final class CommonUtilities {
 			    location = locationManager.getLastKnownLocation(provider); 
 			    
 			    if (location != null) {
-			    	displayMessage(appContext, "Got last location latitude: " 
-	 		    			+ location.getLatitude()
-	 		    			+ " longitude: " + location.getLongitude());
+			    	displayMessage(appContext
+			    			, appContext.getString(R.string.got_last_location
+			    					, location.getLatitude()
+			    					, location.getLongitude()));
 			    }
 	    	}
     	}
