@@ -80,7 +80,7 @@ public class GCMIntentService extends GCMBaseIntentService {
     	
         Log.i(TAG, "Device unregistered");
         displayMessage(context, getString(R.string.gcm_unregistered));
-      //If we are still registered with AirBop it is time to unregister
+        //If we are still registered with AirBop it is time to unregister
         if (GCMRegistrar.isRegisteredOnServer(context)) {
         	AirBopServerUtilities.unregister(context, registrationId);
         } else {

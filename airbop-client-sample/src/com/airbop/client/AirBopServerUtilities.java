@@ -650,9 +650,9 @@ public class AirBopServerUtilities {
 		        	displayMessage(context
 		        			, context.getString(R.string.airbop_server_reg_failed, error_code, error_msg));
 		        	
-		        	// Here we are simplifying and retrying on any error; in a real
-		            // application, it should retry only on unrecoverable errors
-		            // (like HTTP error code 503).
+		        	// Here we are retrying on any error code that is not a 4XX 
+		        	// error code. This will most probably be a 5XX error code meaning
+		        	// thtat the problem was temporary.
 		            Log.e(TAG, "Failed to register on attempt " + i, airbop_e);
 		            if (i == MAX_ATTEMPTS) {
 		                break;
@@ -673,9 +673,8 @@ public class AirBopServerUtilities {
 		    catch (SocketTimeoutException e) {
 		    	 Log.e(TAG, "Failed to register on attempt (timeout)" + i, e);
 		            displayMessage(context, context.getString(R.string.airbop_server_reg_failed_timeout, e.getMessage()));
-		         // Here we are simplifying and retrying on any error; in a real
-		            // application, it should retry only on unrecoverable errors
-		            // (like HTTP error code 503).
+
+		            // Here we are going to retry on a timeout
 		            Log.e(TAG, "Failed to register on attempt " + i, e);
 		            if (i == MAX_ATTEMPTS) {
 		                break;
