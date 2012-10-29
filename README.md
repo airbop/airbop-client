@@ -67,6 +67,57 @@ Add your Google API Project ID and AirBop App Key to the CommonUtilities.java fi
 
 Once you’ve completed the required variable replacement you can build the project in the Package Explorer by selecting Run > Run As > Android Application.
 
+## Detailed Installation and Compilation Example
+
+If you are having troubles adding the project to eclipse, the following is a detailed exampled explaining how to get, compile, and install the AirBop-Client sample onto an Android device. This example is indented for Windows users however the main concepts can be translated onto other operating systems. This example assumes that you have a working knowledge of eclipse, the Android SDK, and git, as well as git-bash, eclipse, and the Android SDK properly installed and configured on your computer.
+
+###### Step 1
+
+Start up git-bash and then browse to the root of your `C:\` drive:
+
+    cd c:
+
+###### Step 2
+    
+Create a directory called: `airbop-test`
+
+    $ mkdir airbop-test
+
+###### Step 4
+    
+Move into that directory and clone the air-bop-client repository:
+
+    $ cd airbop-test
+    $ git clone git@github.com:indigorose/airbop-client.git
+ 
+###### Step 5
+    
+Start up eclipse and select the following as your Workspace Directory
+
+    C:\airbop-test\
+
+###### Step 6    
+
+Click on the Workbench button to bypass the Welcome dialog. Select `File > Import` from the menu. On the `Import` dialog, select `Android > Existing Android Code Into Workspace`.
+
+###### Step 7   
+
+For the root directory choose `C:\airbop-test\airbop-client\airbop-client-sample`. Ensure that the `airbop-client-sample` is selected in the `Projects` area and the click the `Finish` button.
+
+###### Step 8   
+
+Add your Google API Project ID and AirBop App Key to the CommonUtilities.java file. You will be setting the PRROJECT_ID, AIRBOP_APP_KEY, and AIRBOP_APP_SECRET static string values by replacing the dummy value <<REPLACE_ME>> with the correct Id, key, and secret values.
+    
+###### Step 9
+
+Before running the sample you will need to plug in an Android device in order properly test the sample. If you need to test on an emulator be sure to test one that has the Google API's properly installed. You will also have to update the target in the `project.properties` to: 
+
+    # Project target.
+    target=Google Inc.:Google APIs:13
+
+###### Step 10 
+Once your device has been connected or your target has been updated, you can proceed. From the menu select `Run > Run`. This will bring up the `Run As` dialog. Select `Android Application` and then press the `OK` button.
+
 ## What’s Included in the AirBop Sample Project
 
 Below is a brief summary of the java files included in AirBop’s sample project:
