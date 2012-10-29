@@ -208,8 +208,11 @@ An example implementation of this can be found in the `AirBopServerUtilities.jav
 
 ###### Content-Type
 This header parameter controls which format the AirBop servers will expect the body to be in (JSON or form url encoded). There are two options:
+
     application/json
+    
 Or:
+
     application/x-www-form-urlencoded
     
 The recommended format is JSON.   
