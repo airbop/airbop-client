@@ -22,9 +22,7 @@ import static com.airbop.client.CommonUtilities.SERVER_URL;
 import static com.airbop.client.CommonUtilities.USE_SERVICE;
 import static com.airbop.client.CommonUtilities.displayMessage;
 
-
 import com.google.android.gcm.GCMRegistrar;
-
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -38,7 +36,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 
 
-
 /**
  * Simply base class 
  */
@@ -46,7 +43,7 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
 	
 	//21 days in milliseconds
 	public static final long AIRBOP_DEFAULT_ON_SERVER_LIFESPAN_MS =
-            1000 * 3600 * 24 * 21;
+            1000L * 3600L * 24L * 21L;
   
     private AirBopRegisterTask  mRegisterTask = null;
     private AsyncTask<Void, Void, Void> mUnRegisterTask = null;
@@ -68,8 +65,9 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
         // while developing the app, then uncomment it when it's ready.
         GCMRegistrar.checkManifest(this);  
         
-        //Ser the AirBop registration lifespan to be 14 days. This means that after 14 days
+        //Ser the AirBop registration lifespan to be 21 days. This means that after 14 days
         //this client will attempt to reregister with AirBop. 
+        //Make sure that this value is positive, otherwise you will run into issues
         GCMRegistrar.setRegisterOnServerLifespan(this, AIRBOP_DEFAULT_ON_SERVER_LIFESPAN_MS);
         
         mServerData = AirBopServerUtilities.fillDefaults("");
