@@ -3,7 +3,7 @@ airbop-client
 
 This article describes how to use the sample project provided by AirBop, as well as a summary of its contents. The project allows you to easily build a working app and see the result of the messages sent using AirBop’s service. You’re welcome to use any of its helper functions or classes in your own app.
 
-While it’s not required for this sample, you can read a generalized overview of using AirBop in your Android app in the article [Using AirBop in your Android App](http://www.airbop.com)
+While it’s not required for this sample, you can read a generalized overview of using AirBop in your Android app in the article [Adding AirBop to Your App](http://airbop.com/tutorials/adding-airbop-to-your-app)
 
 If you haven’t already, you’ll first want to read the article [Getting Started with AirBop](http://www.airbop.com) which describes the steps you need to take to start using AirBop. The following items are required to work with AirBop’s servers whose values need to be defined before building the sample project code:
 
@@ -189,6 +189,7 @@ When registering or unregistering with the AirBop servers the following headers 
 * x-app-key
 * x-timestamp
 * x-signature
+* Content-Type
 
 They are defined as follows:
 
@@ -204,7 +205,15 @@ An SHA-256 hash constructed exactly as follows:
     "POST" + request_uri + AIRBOP_APP_KEY + timestamp + request.body + AIRBOP_APP_SECRET
 
 An example implementation of this can be found in the `AirBopServerUtilities.java` class. Specifically the `constructSignatureURI` and `computeHash` functions.
-   
+
+###### Content-Type
+This header parameter controls which format the AirBop servers will expect the body to be in (JSON or form url encoded). There are two options:
+    application/json
+Or:
+    application/x-www-form-urlencoded
+    
+The recommended format is JSON.   
+    
 ## What is sent to the AirBop Servers
 
 When you run the AirBop client application the following information can be sent to the server as part of the post parameters during the registration process. The request body is sent in the JSON format. Examples of how to construct the request boy and post to the AirBop servers can be found in the `AirBopServerUtilities.java` class.
