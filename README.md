@@ -71,6 +71,8 @@ Once you’ve completed the required variable replacement you can build the proj
 
 If you are having troubles adding the project to eclipse, the following is a detailed exampled explaining how to get, compile, and install the AirBop-Client sample onto an Android device. This example is indented for Windows users however the main concepts can be translated onto other operating systems. This example assumes that you have a working knowledge of eclipse, the Android SDK, and git, as well as git-bash, eclipse, and the Android SDK properly installed and configured on your computer.
 
+If you run into any issues, or need a more detailed explanation please see the next section. If everything worked you can skip ahead to: What’s Included in the AirBop Sample Project.
+
 ###### Step 1
 
 Start up git-bash and then browse to the root of your `C:\` drive:
