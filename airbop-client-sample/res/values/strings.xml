@@ -21,7 +21,7 @@
     <string name="request_error">ERROR: request could not be processed by AirBop: %1$s - %2$s</string>
     <string name="gcm_registered">GCM: device successfully registered.</string>
     <string name="gcm_unregistered">GCM: device successfully unregistered.</string>
-    <string name="gcm_message">GCM: you\'ve got a message.></string>
+    <string name="airbop_message">AirBop: You\'ve got a message.</string>
     <string name="gcm_error">GCM: error (%1$s).</string>
     <string name="gcm_register_attempt">Attempting to register with the GCM servers.</string>
     <string name="gcm_recoverable_error">GCM: recoverable error (%1$s).</string>

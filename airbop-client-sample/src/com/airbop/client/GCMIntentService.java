@@ -120,7 +120,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         }
  	   	// If there was no body just use a standard message
  	   	if (message == null) {
- 	   		message = getString(R.string.gcm_message);
+ 	   		message = getString(R.string.airbop_message);
    		}
  	   	   		
  	   	generateNotification(context, title, message, url); 	
