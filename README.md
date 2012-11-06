@@ -224,7 +224,7 @@ The optional values, like the required replacements, are located in the `CommonU
 
 ###### USE_LOCATION
 
-Whether or not the client will collect location information and then pass that information on to the server. If this value is set to false, you not need the location permissions in the manifest:
+Whether or not the client will collect location information and then pass that information on to the server. This value is set to false by default. If this value is set to true, you will need to uncomment the location permissions in the manifest:
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/> 
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/> 

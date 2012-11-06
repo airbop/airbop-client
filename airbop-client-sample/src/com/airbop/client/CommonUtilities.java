@@ -56,10 +56,12 @@ public final class CommonUtilities {
      */
     static final String AIRBOP_APP_SECRET = <<REPLACE_ME>>;
        
-    /**
-     * Should we send the location to the AirBopServer
+    /** Should we send the location to the AirBopServer
+     * If you set this value to true, you also need to uncomment the following manifest permissions:
+     * android.permission.ACCESS_FINE_LOCATION
+     * android.permission.ACCESS_COARSE_LOCATION
      */
-    static final boolean USE_LOCATION = true;
+    static final boolean USE_LOCATION = false;
     
     /**
      * Should we use the IntentService or the AsyncTask
