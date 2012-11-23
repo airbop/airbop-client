@@ -26,7 +26,7 @@ On the Import Projects dialog, browse to the ‘airbop-client’ directory as yo
 
 ###### Step 5
 
-Add your Project ID and AirBop App Key to the CommonUtilities.java file. You will be setting the PRROJECT_ID and AIRBOP_APP_KEY static string values by replacing the dummy value <<REPLACE_ME>> with the correct ID and Key values. These replacements are discussed later in this document.
+Add your Google Project Number and AirBop App Key to the CommonUtilities.java file. You will be setting the GOOGLE_PROJECT_NUMBER and AIRBOP_APP_KEY static string values by replacing the dummy value <<REPLACE_ME>> with the correct number and Key values. These replacements are discussed later in this document.
 
 ###### Done
 

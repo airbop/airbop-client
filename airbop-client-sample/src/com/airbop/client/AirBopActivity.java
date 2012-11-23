@@ -17,7 +17,7 @@ package com.airbop.client;
 
 import static com.airbop.client.CommonUtilities.AIRBOP_APP_KEY;
 import static com.airbop.client.CommonUtilities.AIRBOP_APP_SECRET;
-import static com.airbop.client.CommonUtilities.PROJECT_ID;
+import static com.airbop.client.CommonUtilities.GOOGLE_PROJECT_NUMBER;
 import static com.airbop.client.CommonUtilities.SERVER_URL;
 import static com.airbop.client.CommonUtilities.USE_SERVICE;
 import static com.airbop.client.CommonUtilities.displayMessage;
@@ -112,13 +112,13 @@ public class AirBopActivity extends Activity implements AirBopRegisterTask.RegTa
         	// GCMIntentService.onRegistered() where we will then register with
         	// AiRBop's servers.
     		displayMessage(appContext, getString(R.string.gcm_register_attempt));
-        	GCMRegistrar.register(appContext, PROJECT_ID);
+        	GCMRegistrar.register(appContext, GOOGLE_PROJECT_NUMBER);
         } else {
         	
             // We have a regID from the GCM, now check to see if
         	// we have successfully registered with AirBop's servers:
             if (GCMRegistrar.isRegisteredOnServer(appContext)) {
-                // This device is already registered with GCM and with the AitBop
+                // This device is already registered with GCM and with the AirBop
             	// servers, nothing to do here.
             	displayMessage(appContext, getString(R.string.already_registered));
             

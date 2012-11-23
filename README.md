@@ -7,7 +7,7 @@ While it’s not required for this sample, you can read a generalized overview o
 
 If you haven’t already, you’ll first want to read the article [Getting Started with AirBop](http://www.airbop.com) which describes the steps you need to take to start using AirBop. The following items are required to work with AirBop’s servers whose values need to be defined before building the sample project code:
 
-* Your Google API Project ID (from Google’s API console)
+* Your Google Project Number (from Google’s API console)
 * Your AirBop App Key
 * Your AirBop App Secret
 
@@ -61,7 +61,7 @@ On the Import Projects dialog, browse to the ‘airbop-client’ directory as yo
 
 ###### Step 5
 
-Add your Google API Project ID and AirBop App Key to the CommonUtilities.java file. You will be setting the PRROJECT_ID, AIRBOP_APP_KEY, and AIRBOP_APP_SECRET static string values by replacing the dummy value <<REPLACE_ME>> with the correct Id, key, and secret values. These replacements are discussed later in this document.
+Add your Google Project Number and AirBop App Key to the CommonUtilities.java file. You will be setting the GOOGLE_PROJECT_NUMBER, AIRBOP_APP_KEY, and AIRBOP_APP_SECRET static string values by replacing the dummy value <<REPLACE_ME>> with the correct number, key, and secret values. These replacements are discussed later in this document.
 
 ###### Done
 
@@ -108,7 +108,7 @@ For the root directory choose `C:\airbop-test\airbop-client\airbop-client-sample
 
 ###### Step 8   
 
-Add your Google API Project ID and AirBop App Key to the CommonUtilities.java file. You will be setting the PRROJECT_ID, AIRBOP_APP_KEY, and AIRBOP_APP_SECRET static string values by replacing the dummy value <<REPLACE_ME>> with the correct Id, key, and secret values.
+Add your Google Project Number and AirBop App Key to the CommonUtilities.java file. You will be setting the GOOGLE_PROJECT_NUMBER, AIRBOP_APP_KEY, and AIRBOP_APP_SECRET static string values by replacing the dummy value <<REPLACE_ME>> with the correct number, key, and secret values.
     
 ###### Step 9
 
@@ -152,7 +152,7 @@ A simple helper data class used to store data, register and unregister with the 
 
 ###### [airbop-client-sample/src/com/airbop/client/CommonUtilities.java](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/src/com/airbop/client/CommonUtilities.java)
 
-This is a utility class that contains the constants for your Google API Project ID, AirBop App Key, and AirBop App Secret as well as a helper method to display a message.
+This is a utility class that contains the constants for your Google Project Number, AirBop App Key, and AirBop App Secret as well as a helper method to display a message.
 
 ###### [airbop-client-sample/src/com/airbop/client/DemoActivity.java](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/src/com/airbop/client/DemoActivity.java)
 
@@ -184,16 +184,16 @@ Open the file containing the “CommonUtilities” class located in:
 
     airbop-client-sample/src/com/airbop/client/CommonUtilities.java
 
-###### Step 2 – Enter your Google API Project ID
-Locate the string constant definition named "PROJECT_ID" at the beginning of the class, and replace the text `<<REPLACE_ME>>` with your own Google API Project ID you got from Google’s API console .
+###### Step 2 – Enter your Google Project Number
+Locate the string constant definition named "GOOGLE_PROJECT_NUMBER" at the beginning of the class, and replace the text `<<REPLACE_ME>>` with your own Google Project Number you got from Google’s API console .
 
 Line containing value to replace:
 
-    static final String PROJECT_ID = <<REPLACE_ME>>;
+    static final String GOOGLE_PROJECT_NUMBER = <<REPLACE_ME>>;
 
-Replace `<<REPLACE_ME>>` with your Google API Project ID, for example:
+Replace `<<REPLACE_ME>>` with your Google Project Number, for example:
 
-    static final String PROJECT_ID = "918193457137";
+    static final String GOOGLE_PROJECT_NUMBER = "918193457137";
 
 
 ###### Step 3 – Enter your AirBop App Key

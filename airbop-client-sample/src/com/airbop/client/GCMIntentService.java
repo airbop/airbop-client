@@ -16,7 +16,7 @@
  */
 package com.airbop.client;
 
-import static com.airbop.client.CommonUtilities.PROJECT_ID;
+import static com.airbop.client.CommonUtilities.GOOGLE_PROJECT_NUMBER;
 import static com.airbop.client.CommonUtilities.displayMessage;
 
 import android.app.Notification;
@@ -43,11 +43,11 @@ public class GCMIntentService extends GCMBaseIntentService {
     private static final String TAG = "GCMIntentService";
         
     public GCMIntentService(boolean withLocation) {
-        super(PROJECT_ID);
+        super(GOOGLE_PROJECT_NUMBER);
     }
     
     public GCMIntentService() {
-        super(PROJECT_ID);
+        super(GOOGLE_PROJECT_NUMBER);
     }
 
     /**

@@ -42,9 +42,9 @@ public final class CommonUtilities {
     static final String SERVER_URL = "http://www.airbop.com/api/v1/";
 
     /**
-     * Google API project id registered to use GCM.
+     * Google Project Number registered to use GCM (from your Google API Console).
      */
-    static final String PROJECT_ID = <<REPLACE_ME>>;
+    static final String GOOGLE_PROJECT_NUMBER = <<REPLACE_ME>>;
     
     /**
      * AirBop App key to identify this app
