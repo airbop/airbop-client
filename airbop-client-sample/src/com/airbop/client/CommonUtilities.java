@@ -38,7 +38,6 @@ public final class CommonUtilities {
     /**
      * Base URL of the Demo Server (such as http://my_host:8080/gcm-demo)
      */ 
-    //static final String SERVER_URL = "http://www.airbop.com/";
     static final String SERVER_URL = "http://www.airbop.com/api/v1/";
 
     /**
@@ -50,12 +49,12 @@ public final class CommonUtilities {
      * AirBop App key to identify this app
      */
     static final String AIRBOP_APP_KEY = <<REPLACE_ME>>;
-    
+        
     /**
      * AIRBOP_APP_SECRET App key to identify this app shhhh
      */
     static final String AIRBOP_APP_SECRET = <<REPLACE_ME>>;
-       
+           
     /** Should we send the location to the AirBopServer
      * If you set this value to true, you also need to uncomment the following manifest permissions:
      * android.permission.ACCESS_FINE_LOCATION

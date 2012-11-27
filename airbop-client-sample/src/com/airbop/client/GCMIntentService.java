@@ -19,6 +19,8 @@ package com.airbop.client;
 import static com.airbop.client.CommonUtilities.GOOGLE_PROJECT_NUMBER;
 import static com.airbop.client.CommonUtilities.displayMessage;
 
+import android.support.v4.app.NotificationCompat.Builder;
+import android.support.v4.app.NotificationCompat;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -175,8 +177,6 @@ public class GCMIntentService extends GCMBaseIntentService {
         long when = System.currentTimeMillis();
         NotificationManager notificationManager = (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification notification = new Notification(icon, message, when);
-        
         
         if ((title == null) || (title.equals(""))) {
         	title = context.getString(R.string.app_name);
@@ -187,7 +187,17 @@ public class GCMIntentService extends GCMBaseIntentService {
                 Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent intent =
                 PendingIntent.getActivity(context, 0, notificationIntent, 0);
-        notification.setLatestEventInfo(context, title, message, intent);
+                
+        Notification notification = new NotificationCompat.Builder(context)
+	        .setContentTitle(title)
+	        .setContentText(message)
+	        .setContentIntent(intent)
+	        .setSmallIcon(icon)
+	        .setWhen(when)
+	        .setStyle(new NotificationCompat.BigTextStyle()
+	        	.bigText(message))
+	    .build();
+        
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
         notificationManager.notify(0, notification);
     }
@@ -200,8 +210,6 @@ public class GCMIntentService extends GCMBaseIntentService {
         long when = System.currentTimeMillis();
         NotificationManager notificationManager = (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification notification = new Notification(icon, message, when);
-        
         
         if ((title == null) || (title.equals(""))) {
         	title = context.getString(R.string.app_name);
@@ -223,7 +231,17 @@ public class GCMIntentService extends GCMBaseIntentService {
                 Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent intent =
                 PendingIntent.getActivity(context, 0, notificationIntent, 0);
-        notification.setLatestEventInfo(context, title, message, intent);
+                
+        Notification notification = new NotificationCompat.Builder(context)
+		        .setContentTitle(title)
+		        .setContentText(message)
+		        .setContentIntent(intent)
+		        .setSmallIcon(icon)
+		        .setWhen(when)
+		        .setStyle(new NotificationCompat.BigTextStyle()
+	            	.bigText(message))
+	        .build();
+        
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
         notificationManager.notify(0, notification);
     }
