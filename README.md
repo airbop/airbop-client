@@ -146,7 +146,7 @@ An [AsyncTask](http://developer.android.com/reference/android/os/AsyncTask.html)
 
 If you want to perform your registration outside of an Activity, might want to consider using the AirBopIntentService class.
 
-###### [airbop-client-sampl/src/com/airbop/client/AirBopServerUtilities.java](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/src/com/airbop/client/AirBopServerUtilities.java)
+###### [airbop-client-sample/src/com/airbop/client/AirBopServerUtilities.java](https://github.com/indigorose/airbop-client/blob/master/airbop-client-sample/src/com/airbop/client/AirBopServerUtilities.java)
 
 A simple helper data class used to store data, register and unregister with the AirBop servers. 
 
@@ -231,7 +231,7 @@ Whether or not the client will collect location information and then pass that i
 	
 ###### USE_SERVICE
 
-Controls whether or not the client will use `AirBopIntentService.java` or `AirBopRegisterTask.java` when registering with the AirBop servers. If `USE_SERVICE` is `true` then the `AirBopIntentService.java` [IntentService]( http://developer.android.com/reference/android/app/IntentService.html) will be used, and if `USE_SERVICE` is `true` then the `AirBopIntentService.java` [AsyncTask]( http://developer.android.com/reference/android/os/AsyncTask.html) will be used.
+Controls whether or not the client will use `AirBopIntentService.java` or `AirBopRegisterTask.java` when registering with the AirBop servers. If `USE_SERVICE` is `true` then the `AirBopIntentService.java` [IntentService]( http://developer.android.com/reference/android/app/IntentService.html) will be used, and if `USE_SERVICE` is `false` then the `AirBopRegisterTask.java` [AsyncTask]( http://developer.android.com/reference/android/os/AsyncTask.html) will be used.
 
 This gives you the option to test both approaches easily. The approach you will use in your final app depends on your specific requirements. You generally won't want to switch between the two methods in your app but changing this value will allow you test the two different sample implementations easily.
 
