@@ -325,7 +325,7 @@ or:
 
     	"label":"free",
     	
-Or whatever else you would want. The label is a 50 character string that can be used to 'tag' or 'group' devices. You will be able to target devices based on this value when you send your message from the AirBop servers. More information on the label can be read here: [Register a device with AirBop](http://support.airbop.com/kb/api/register-a-device-with-airbop)
+Or whatever else you would need.
 
 ###### Unregistering
 
